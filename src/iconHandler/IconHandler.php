@@ -344,8 +344,7 @@ class IconHandler {
      * @return void
      */
     private static function generateUnifiedFontCSS(): void {
-        $enabled_fonts_json = Settings::getSettingFromDB('loaded_fonts');
-        $enabled_fonts = json_decode($enabled_fonts_json, true);
+        $enabled_fonts = self::getLoadedFonts();
 
         if (empty($enabled_fonts)) {
             error_log("No fonts enabled.");
@@ -363,8 +362,8 @@ class IconHandler {
         $css_output = '';
 
         $font_mappings = self::getLoadedFontGlyphsMapping();
-
-        foreach ($font_mappings as $fontFolder) {
+        foreach ($font_mappings as $fontFolder => $glyph_mappings) {
+            error_log("t3");
             if (empty($fontFolder)) {
                 error_log("Skipping empty or invalid font folder" . $fontFolder);
                 continue;
@@ -374,17 +373,19 @@ class IconHandler {
             $font_files = glob($font_dir . '/*.{ttf,otf}', GLOB_BRACE);
 
             if (empty($font_files)) {
+                error_log("No font files found in {$font_dir}");
                 continue;
             }
 
             $font_file = $font_files[0];
+            error_log("t2");
             
             try {
                 $font_name = Font::load($font_file)->getFontName();
 
                 $css_output .= "@font-face{font-family:'{$font_name}';src:url('". self::$iconsUrl ."/{$fontFolder}/" . basename($font_file) ."') format('truetype');}";
                 $css_output .= '[class^="ei-' . strtolower($fontFolder) . '-"]{font-family:"' . $font_name . '";}';
-
+                error_log("t1");
                 foreach ($font_mappings[$fontFolder] as $glyph_mapping) {
                     $glyph_name = $glyph_mapping[0];
                     $unicode_hex = $glyph_mapping[1];
@@ -397,7 +398,12 @@ class IconHandler {
         }
         if ($css_output) {
             $css_file = self::$iconsDir . '/generated-icons.css';
-            file_put_contents($css_file, $css_output);
+            error_log("t5");
+            if (file_put_contents($css_file, $css_output)) {
+                error_log("CSS file generated successfully: {$css_file}");
+            } else {
+                error_log("Error writing CSS to file: {$css_file}");
+            }
         }
 
         update_option('ei_prev_loaded_fonts', json_encode($enabled_fonts));

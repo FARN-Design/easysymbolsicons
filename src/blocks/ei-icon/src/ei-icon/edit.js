@@ -4,14 +4,18 @@ const { TextControl, PanelBody, PanelRow, ColorPicker } = wp.components;
 const { BlockControls, AlignmentToolbar, InspectorControls } = wp.blockEditor;
 const { useBlockProps } = wp.blockEditor;
 
+function generateRandomHash() {
+    return Math.random().toString(36).substr(2, 9) + Date.now().toString(36).substr(2, 5);
+}
+
 export default function Edit({ attributes, setAttributes }) {
     const { fontSize, lineHeight, align, backgroundColor, textColor, className } = attributes;
+    const blockId = generateRandomHash();
 
     const [fonts, setFonts] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [showFontSelection, setShowFontSelection] = useState(false);
 
     const [selectedIcon, setSelectedIcon] = useState({ className });
 
@@ -68,11 +72,6 @@ export default function Edit({ attributes, setAttributes }) {
     const handleIconClick = (className) => {
         setSelectedIcon({ className });
         setAttributes({ className });
-        setShowFontSelection(false);
-    };
-
-    const toggleFontSelection = () => {
-        setShowFontSelection(prevState => !prevState);
     };
 
     const blockProps = useBlockProps({
@@ -85,6 +84,7 @@ export default function Edit({ attributes, setAttributes }) {
     });
 
     const wrapperClass = `selected-icon-wrapper align${align}`;
+    const selectorID = `ei-icon-grid-${blockId}`;
     
     return (
          <>
@@ -145,17 +145,17 @@ export default function Edit({ attributes, setAttributes }) {
                     <span
                         className={selectedIcon.className}
                         style={{ cursor: 'pointer' }}
-                        onClick={toggleFontSelection}
+                        popovertarget={selectorID}
                     />
                 ) : (
-                    <p onClick={toggleFontSelection}>
+                    <p popovertarget={selectorID}>
                         {__('No Icon Selected', 'easyicon')}
                     </p>
                 )}
             </div>
 
-            {showFontSelection && (
-                <div className="ei-icon-grid">
+            {(
+                <div className="ei-icon-grid" id={selectorID} popover="true">
                     <div className="ei-icon-search">
                         <TextControl
                             label={__('Search Icons', 'easyicon')}
@@ -184,7 +184,6 @@ export default function Edit({ attributes, setAttributes }) {
                                                 style={{ cursor: 'pointer', fontSize: '20px', margin: '5px' }}
                                             >
                                                 <span className={iconClass}></span>
-                                                <span>{name}</span>
                                             </span>
                                         );
                                     })}

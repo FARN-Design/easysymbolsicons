@@ -46,6 +46,9 @@ const {
 const {
   useBlockProps
 } = wp.blockEditor;
+function generateRandomHash() {
+  return Math.random().toString(36).substr(2, 9) + Date.now().toString(36).substr(2, 5);
+}
 function Edit({
   attributes,
   setAttributes
@@ -58,11 +61,11 @@ function Edit({
     textColor,
     className
   } = attributes;
+  const blockId = generateRandomHash();
   const [fonts, setFonts] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showFontSelection, setShowFontSelection] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState({
     className
   });
@@ -115,10 +118,6 @@ function Edit({
     setAttributes({
       className
     });
-    setShowFontSelection(false);
-  };
-  const toggleFontSelection = () => {
-    setShowFontSelection(prevState => !prevState);
   };
   const blockProps = useBlockProps({
     style: {
@@ -129,6 +128,7 @@ function Edit({
     }
   });
   const wrapperClass = `selected-icon-wrapper align${align}`;
+  const selectorID = `ei-icon-grid-${blockId}`;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(BlockControls, {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AlignmentToolbar, {
@@ -186,13 +186,15 @@ function Edit({
         style: {
           cursor: 'pointer'
         },
-        onClick: toggleFontSelection
+        popovertarget: selectorID
       }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        onClick: toggleFontSelection,
+        popovertarget: selectorID,
         children: __('No Icon Selected', 'easyicon')
       })
-    }), showFontSelection && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
       className: "ei-icon-grid",
+      id: selectorID,
+      popover: "true",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "ei-icon-search",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TextControl, {
@@ -213,7 +215,7 @@ function Edit({
           className: "ei-font-icons",
           children: font.glyphs.map(([name], i) => {
             const iconClass = `ei-${font.fontFolder.toLowerCase()}-${name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`;
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
               className: "ei-font-icon",
               onClick: () => handleIconClick(iconClass) // Select icon on click
               ,
@@ -222,11 +224,9 @@ function Edit({
                 fontSize: '20px',
                 margin: '5px'
               },
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
                 className: iconClass
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-                children: name
-              })]
+              })
             }, i);
           })
         })]

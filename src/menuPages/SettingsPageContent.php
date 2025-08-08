@@ -76,40 +76,6 @@ function displayGeneralTab() {
                 }
             }
 
-            $font_mappings = IconHandler::getLoadedFontGlyphsMapping();
-
-            $unicode_map = [];
-            $conflicts = [];
-
-            foreach ($font_mappings as $font_folder => $glyphs) {
-                foreach ($glyphs as $glyph) {
-                    $unicode = $glyph[1];
-
-                    if (isset($unicode_map[$unicode])) {
-                        $unicode_map[$unicode][] = $font_folder;
-                    } else {
-                        $unicode_map[$unicode] = [$font_folder];
-                    }
-                }
-            }
-
-            foreach ($unicode_map as $unicode => $fonts) {
-                if (count($fonts) > 1) {
-                    $conflicts[$unicode] = $fonts;
-                }
-            }
-
-            if (!empty($conflicts)) {
-                echo '<div class="error notice"><p>';
-                echo __("There are icon Unicode conflicts in the following fonts:", "easyicon") . '<br>';
-
-                foreach ($conflicts as $unicode => $conflicting_fonts) {
-                    echo "<strong>Unicode $unicode:</strong> " . implode(', ', $conflicting_fonts) . '<br>';
-                }
-
-                echo '</p></div>';
-            }
-
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['easyicon_fonts_nonce']) && wp_verify_nonce($_POST['easyicon_fonts_nonce'], 'save_easyicon_fonts')) {
                 $fonts = $_POST['loaded_fonts'] ?? [];
                 Settings::saveSettingInDB('loaded_fonts', json_encode($fonts));
