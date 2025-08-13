@@ -382,7 +382,6 @@ class IconHandler {
 
         $font_mappings = self::getLoadedFontGlyphsMapping();
         foreach ($font_mappings as $fontFolder => $glyph_mappings) {
-            error_log("t3");
             if (empty($fontFolder)) {
                 error_log("Skipping empty or invalid font folder" . $fontFolder);
                 continue;
@@ -397,7 +396,6 @@ class IconHandler {
             }
 
             $font_file = $font_files[0];
-            error_log("t2");
             
             try {
                 $font_name = Font::load($font_file)->getFontName();
@@ -417,7 +415,6 @@ class IconHandler {
         }
         if ($css_output) {
             $css_file = self::$iconsDir . '/generated-icons.css';
-            error_log("t5");
             if (file_put_contents($css_file, $css_output)) {
                 error_log("CSS file generated successfully: {$css_file}");
             } else {
