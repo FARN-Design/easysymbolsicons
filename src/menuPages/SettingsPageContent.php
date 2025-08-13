@@ -36,26 +36,25 @@ switch ($tab) {
 function displayGeneralTab() {
     ?>
     <div class="wrap">
+        <h1><?php echo esc_html__("EasyIcon", "easyicon"); ?></h1>
         <hr class="wp-header-end">
-        <h2><?php echo __("General Settings", "easyicon"); ?></h2>
-        <p><?php echo __("With EasyIcon, you can easily manage icon fonts for your website. Select from preloaded fonts or upload your own custom fonts in TTF or OTF format.", "easyicon"); ?></p>
 
-        <h3><?php echo __("Upload Custom Fonts", "easyicon"); ?></h3>
-        <p><?php echo __("You can upload your custom fonts by heading to the Font Select tab. Once uploaded, your fonts will be available for use within the site.", "easyicon"); ?></p>
+        <p><?php echo esc_html__("Manage your icon fonts and use them easily.", "easyicon"); ?></p>
 
-        <h3><?php echo __("Using Icons", "easyicon"); ?></h3>
-        <p><?php echo __("To add an icon to your content, use the 'ei-icon' block. When you click on the block, an icon select menu will appear, allowing you to choose from your selected or custom fonts.", "easyicon"); ?></p>
-
-        <h3><?php echo __("Tips", "easyicon"); ?></h3>
-        <ul>
-            <li><?php echo __("Custom fonts can only be TTF or OTF format.", "easyicon"); ?></li>
-            <li><?php echo __("Don't forget to save your settings after uploading or selecting your fonts.", "easyicon"); ?></li>
-        </ul>
+        <section style="margin-top: 2em;">
+            <h2><?php echo esc_html__("Quick Start"); ?></h2>
+            <ul>
+                <li><?php echo esc_html__("Upload and manage icon fonts on the Font Select tab."); ?></li>
+                <li><?php echo esc_html__("Add icons in posts and pages using the 'ei-icon' block."); ?></li>
+                <li><?php echo esc_html__("Supported font formats: TTF and OTF."); ?></li>
+            </ul>
+        </section>
     </div>
     <?php
 }
 
-    function displayFontSelectTab() {
+
+function displayFontSelectTab() {
     ?>
     <div class="wrap">
         <hr class="wp-header-end">
