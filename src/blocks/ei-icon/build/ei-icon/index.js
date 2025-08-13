@@ -33,15 +33,11 @@ const {
   useEffect
 } = wp.element;
 const {
-  TextControl,
-  PanelBody,
-  PanelRow,
-  ColorPicker
+  TextControl
 } = wp.components;
 const {
   BlockControls,
-  AlignmentToolbar,
-  InspectorControls
+  AlignmentToolbar
 } = wp.blockEditor;
 const {
   useBlockProps
@@ -134,49 +130,6 @@ function Edit({
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(AlignmentToolbar, {
         value: align,
         onChange: handleAlignmentChange
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(InspectorControls, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(PanelBody, {
-        title: __('Icon Settings', 'easyicon'),
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(PanelRow, {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TextControl, {
-            label: __('Font Size', 'easyicon'),
-            value: fontSize,
-            onChange: value => handleTypographyChange(value, 'fontSize'),
-            type: "number",
-            min: "10",
-            max: "200",
-            step: "1"
-          })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(PanelRow, {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(TextControl, {
-            label: __('Line Height', 'easyicon'),
-            value: lineHeight,
-            onChange: value => handleTypographyChange(value, 'lineHeight'),
-            type: "number",
-            min: "10",
-            max: "200",
-            step: "1"
-          })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(PanelRow, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-            children: __('Background Color', 'easyicon')
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ColorPicker, {
-            color: backgroundColor,
-            onChangeComplete: color => setAttributes({
-              backgroundColor: color.hex
-            })
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(PanelRow, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("label", {
-            children: __('Text Color', 'easyicon')
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ColorPicker, {
-            color: textColor,
-            onChangeComplete: color => setAttributes({
-              textColor: color.hex
-            })
-          })]
-        })]
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
       ...blockProps,

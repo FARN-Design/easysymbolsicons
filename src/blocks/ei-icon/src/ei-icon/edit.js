@@ -1,7 +1,7 @@
 const { __ } = wp.i18n;
 const { useState, useEffect } = wp.element;
-const { TextControl, PanelBody, PanelRow, ColorPicker } = wp.components;
-const { BlockControls, AlignmentToolbar, InspectorControls } = wp.blockEditor;
+const { TextControl } = wp.components;
+const { BlockControls, AlignmentToolbar } = wp.blockEditor;
 const { useBlockProps } = wp.blockEditor;
 
 function generateRandomHash() {
@@ -94,51 +94,6 @@ export default function Edit({ attributes, setAttributes }) {
                     onChange={handleAlignmentChange}
                 />
             </BlockControls>
-
-            <InspectorControls>
-                <PanelBody title={__('Icon Settings', 'easyicon')}>
-                    <PanelRow>
-                        <TextControl
-                            label={__('Font Size', 'easyicon')}
-                            value={fontSize}
-                            onChange={(value) => handleTypographyChange(value, 'fontSize')}
-                            type="number"
-                            min="10"
-                            max="200"
-                            step="1"
-                        />
-                    </PanelRow>
-
-                    <PanelRow>
-                        <TextControl
-                            label={__('Line Height', 'easyicon')}
-                            value={lineHeight}
-                            onChange={(value) => handleTypographyChange(value, 'lineHeight')}
-                            type="number"
-                            min="10"
-                            max="200"
-                            step="1"
-                        />
-                    </PanelRow>
-
-                    <PanelRow>
-                        <label>{__('Background Color', 'easyicon')}</label>
-                        <ColorPicker
-                            color={backgroundColor}
-                            onChangeComplete={(color) => setAttributes({ backgroundColor: color.hex })}
-                        />
-                    </PanelRow>
-
-                    <PanelRow>
-                        <label>{__('Text Color', 'easyicon')}</label>
-                        <ColorPicker
-                            color={textColor}
-                            onChangeComplete={(color) => setAttributes({ textColor: color.hex })}
-                        />
-                    </PanelRow>
-                </PanelBody>
-            </InspectorControls>
-            
 
             <div {...blockProps} className={`${blockProps.className} ${wrapperClass}`}>
                 {selectedIcon.className ? (
