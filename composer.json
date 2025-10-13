@@ -16,11 +16,23 @@
         {
             "type": "vcs",
             "url": "git@github.com:FARN-Design/farn-core.git"
+        },
+        {
+            "type": "package",
+          "package": {
+            "name": "phenx/php-font-lib",
+            "version": "dev-master",
+            "source": {
+              "url": "https://github.com/NLion74/php-font-lib",
+              "type": "git",
+              "reference": "master"
+            }
+          }
         }
     ],
     "require": {
         "farn/farn-core": "dev-main",
-        "phenx/php-font-lib": "^1.0"
+      "phenx/php-font-lib": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^9",
