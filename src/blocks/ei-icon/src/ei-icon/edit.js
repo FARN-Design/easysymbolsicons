@@ -131,7 +131,7 @@ export default function Edit({ attributes, setAttributes }) {
                                 <summary>{font.fontFolder}</summary>
                                 <div className="ei-font-icons">
                                     {font.glyphs.map(([name], i) => {
-                                        const iconClass = `ei-${font.fontFolder.toLowerCase()}-${name.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`;
+                                        const iconClass = `ei-${font.fontFolder.toLowerCase()}-${name}`;
 
                                         return (
                                             <span
