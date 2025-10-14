@@ -130,10 +130,14 @@ function displayFontSelectTab() {
             }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_font_nonce']) && wp_verify_nonce($_POST['remove_font_nonce'], 'remove_easyicon_font')) {
-                $font_to_remove = sanitize_text_field($_POST['font_to_remove']);
-                if (!empty($font_to_remove)) {
-                    IconHandler::removeFont($font_to_remove);
-                    echo '<div class="updated notice"><p>' . __("Font removed successfully.", "easyicon") . '</p></div>';
+                if (isset($_POST['font_to_remove'])) {
+                    $font_to_remove = sanitize_text_field($_POST['font_to_remove']);
+                    if (!empty($font_to_remove)) {
+                        IconHandler::removeFont($font_to_remove);
+                        echo '<div class="updated notice"><p>' . __("Font removed successfully.", "easyicon") . '</p></div>';
+                    }
+                } else {
+                    echo '<div class="error notice"><p>' . __("No font specified to remove.", "easyicon") . '</p></div>';
                 }
             }
 
