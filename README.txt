@@ -2,9 +2,9 @@
 Contributors: farndesign
 Tags: icons, icon fonts, font management, block editor, easy icon
 Requires at least: 6.0
-Tested up to: 6.3
+Tested up to: 6.8
 Stable tag: 1.0.0
-Requires PHP: 8.0
+Requires PHP: 8.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -37,9 +37,6 @@ Features include:
 5. Click the block to open the icon selector and choose your desired icon.
 
 == Screenshots ==
-
-1. Easy Icon Settings Dashboard (screenshot-1.png)  (still needs to be added)
-2. Font Selection and Upload Interface (screenshot-2.png)  (still needs to be added)
 
 == Changelog ==
 
