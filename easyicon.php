@@ -19,6 +19,7 @@ use Farn\EasyIcon\database\Settings;
 use Farn\EasyIcon\menuPages\SettingsPage;
 use Farn\EasyIcon\blocks\Blocks;
 use Farn\EasyIcon\iconHandler\IconHandler;
+use Farn\EasyIcon\restEndpoints\RestHandler;
 
 if (! defined( 'ABSPATH' ) ) {
     die;
@@ -59,6 +60,8 @@ class EasyIcon
 
         Blocks::setup();
         IconHandler::getInstance();
+
+        add_action('rest_api_init', [RestHandler::class, 'register_routes']);
 
         //Activation and Deactivation
         register_activation_hook( __FILE__, [self::class, "pluginActivation"] );

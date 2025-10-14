@@ -10,7 +10,7 @@ use WP_REST_Response;
 /**
  * Class Blocks
  *
- * Handles block registration and in this case a REST API endpoint for the ei-icon block.
+ * Handles block registration.
  */
 class Blocks {
 
@@ -41,25 +41,5 @@ class Blocks {
                 error_log("Block registration failed.");
             }
 		} );
-    }
-
-    /**
-     * REST API callback: Retrieves glyph mappings for all loaded fonts.
-     *
-     * Returns a 200 response with glyph data if successful,
-     * or a 500 response with an error message on failure.
-     *
-     * @return WP_REST_Response The REST API response.
-     */
-    public static function get_available_fonts() {
-        $fontGlyphs = IconHandler::getLoadedFontGlyphsMapping();
-
-        if (is_array($fontGlyphs)) {
-            return new WP_REST_Response($fontGlyphs, 200);
-        } else {
-            return new WP_REST_Response([
-                'error' => 'Invalid font data',
-            ], 500);
-        }
     }
 }

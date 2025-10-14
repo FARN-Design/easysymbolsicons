@@ -24,7 +24,7 @@ export default function Edit({ attributes, setAttributes }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/?rest_route=/easyicon/v1/fonts');
+                const response = await fetch('/wp-json/easyicon/v1/available-fonts');
                 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -100,15 +100,15 @@ export default function Edit({ attributes, setAttributes }) {
 
             <div {...blockProps} className={`${blockProps.className} ${wrapperClass}`}>
                 {selectedIcon.className ? (
-                    <span
+                    <button
                         className={selectedIcon.className}
                         style={{ cursor: 'pointer' }}
                         popovertarget={selectorID}
-                    />
+                    ></button>
                 ) : (
-                    <p popovertarget={selectorID}>
+                    <button popovertarget={selectorID}>
                         {__('No Icon Selected', 'easyicon')}
-                    </p>
+                    </button>
                 )}
             </div>
 

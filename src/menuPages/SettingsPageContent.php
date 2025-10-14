@@ -9,7 +9,63 @@ use Farn\EasyIcon\iconHandler\IconHandler;
 
 $tab = $_GET['tab'] ?? "default";
 
-?>
+$iconDirExists = IconHandler::doesIconsDirectoryExist();
+
+if (!$iconDirExists): ?>
+    <div id="default-fonts-popup" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#fff; padding:2em; border-radius:8px; max-width:400px; text-align:center;">
+            <h2><?php echo __("No Icon Fonts Available", "easyicon"); ?></h2>
+            <p><?php echo __("No icon fonts are currently installed. You can choose to download a set of default fonts from external sources, or upload your own custom fonts instead.", "easyicon"); ?></p>
+            <div style="background:#f1f1f1; color:#555; font-size:0.85em; padding:0.75em; margin:1em 0; border-radius:4px; text-align:left;">
+                <?php echo __("Note: Default fonts will be downloaded from trusted sources only – JSDelivr CDN and the official WordPress Dashicons GitHub repository.", "easyicon"); ?>
+            </div>
+            <button id="download-default-fonts" class="button button-primary">
+                <?php echo __("Download Default Fonts", "easyicon"); ?>
+            </button>
+            <button id="close-popup" class="button">
+                <?php echo __("I'll Upload My Own", "easyicon"); ?>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const popup = document.getElementById('default-fonts-popup');
+            popup.style.display = 'flex';
+
+            document.getElementById('close-popup').addEventListener('click', function () {
+                popup.style.display = 'none';
+            });
+
+            document.getElementById('download-default-fonts').addEventListener('click', function () {
+                fetch('<?php echo esc_url(rest_url('easyicon/v1/download-default-fonts')); ?>', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-WP-Nonce': '<?php echo wp_create_nonce('wp_rest'); ?>',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert('<?php echo __("Default fonts downloaded successfully. Reloading...", "easyicon"); ?>');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    alert('<?php echo __("Failed to download default fonts.", "easyicon"); ?>');
+                    console.error(error);
+                });
+            });
+        });
+    </script>
+<?php endif; ?>
+
+
 <div class="wrap">
     <h1><?php echo __("Settings", "easyicon"); ?></h1>
     <nav class="nav-tab-wrapper">
