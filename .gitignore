@@ -8,3 +8,4 @@ wp-tests-lib
 src/blocks/ei-icon/build/
 
 .idea/*
+.DS_Store

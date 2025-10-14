@@ -63,7 +63,7 @@ class Settings
 			'loaded_fonts' => json_encode([]),
 		];
 
-		$results = self::$wpdb->get_results('SELECT Setting FROM ' .self::$tableName, ARRAY_N);
+		$results = self::$wpdb->prepare("SELECT Setting FROM %i" ,array(self::$tableName))->get_results();
 		$results = array_column($results,0);
 
 		foreach ($defaultSettings as $key => $value) {
@@ -99,8 +99,9 @@ class Settings
 	 * @return mixed
 	 */
 	public static function getSettingFromDB( string $setting) {
-		$sql = "SELECT Value FROM ".self::$tableName . " WHERE Setting = \"" . $setting . "\";";
-		$result = self::$wpdb->get_results($sql, ARRAY_N);
+		$sql = "SELECT Value FROM %i WHERE Setting = %s;";
+//		$result = self::$wpdb->get_results($sql, ARRAY_N);
+		$result = self::$wpdb->prepare($sql, array(self::$tableName, $setting))->get_results();
 
 		if (sizeof($result) == 0){
 			wp_send_json_error("Database Setting not Found in Database: ".$setting);

@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: Easyicon
-Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
+Plugin URI: https://github.com/FARN-Design/easyicon
 Description: A plugin to load and use various icon fonts with ease.
 Version: 1.0
 Author: jonte
