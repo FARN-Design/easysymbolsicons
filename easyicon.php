@@ -1,13 +1,15 @@
 <?php
 
 /*
-Plugin Name: Easyicon
+Plugin Name: Easy Icon
 Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
 Description: A plugin to load and use various icon fonts with ease.
-Version: 1.0
-Author: jonte
-Author URI: https://farn.de/
-License: A "Slug" license name e.g. GPL2
+Version: 1.0.0
+Author: Farnlabs
+Author URI: https://profiles.wordpress.org/farndesign/
+License: GPLv3
+Text Domain: easyvcard
+Domain Path: src/resources/language
 */
 
 require 'vendor/autoload.php';

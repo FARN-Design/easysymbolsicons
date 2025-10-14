@@ -75,21 +75,52 @@ class IconHandler {
 
         $fontName = sanitize_file_name($fontName);
 
-        $fontDir = self::$iconsDir . '/' . (preg_replace('/\.(otf|ttf)$/i', '', $fontName));
-        if (!file_exists($fontDir)) {
-            mkdir($fontDir, 0755, true);
+        $fontDir = trailingslashit(self::$iconsDir) . preg_replace('/\.(otf|ttf)$/i', '', $fontName);
+
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
 
-        $fontPath = $fontDir . '/' . $fontName;
+        global $wp_filesystem;
 
-        if (file_put_contents($fontPath, $fontBlob) !== false) {
-            error_log("Successfully created file at" . $fontPath);
+        if (empty($wp_filesystem)) {
+            WP_Filesystem();
+        }
+
+        if (!$wp_filesystem->is_dir(self::$iconsDir)) {
+            if (!$wp_filesystem->mkdir(self::$iconsDir)) {
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log("Failed to create directory: " . self::$iconsDir);
+                }
+                return false;
+            }
+        }
+
+        if (!$wp_filesystem->is_dir($fontDir)) {
+            if (!$wp_filesystem->mkdir($fontDir)) {
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log("Failed to create directory: " . $fontDir);
+                }
+                return false;
+            }
+        }
+
+        $fontPath = trailingslashit($fontDir) . $fontName;
+
+        if ($wp_filesystem->put_contents($fontPath, $fontBlob, FS_CHMOD_FILE)) {
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log("Successfully created file at " . $fontPath);
+            }
             return true;
         }
-        
-        error_log("Failed to write to file");
+
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log("Failed to write to file: " . $fontPath);
+        }
+
         return false;
     }
+
 
     /**
      * Removes a font from the system, deleting all its font files.
@@ -299,10 +330,7 @@ class IconHandler {
                 }
 
                 if (!self::addFont($fontBlob, $filename)) {
-                    error_log("EasyIcon: Failed to add font: $filename");
                     $allSuccess = false;
-                } else {
-                    error_log("EasyIcon: Successfully added font: $filename");
                 }
             } catch (\Throwable $e) {
                 error_log("EasyIcon Exception when downloading $filename: " . $e->getMessage());
@@ -439,7 +467,6 @@ class IconHandler {
         $enabled_fonts = self::getLoadedFonts();
 
         if (empty($enabled_fonts)) {
-            error_log("No fonts enabled.");
             return;
         }
 
@@ -485,7 +512,6 @@ class IconHandler {
         if ($css_output) {
             $css_file = self::$iconsDir . '/generated-icons.css';
             if (file_put_contents($css_file, $css_output)) {
-                error_log("CSS file generated successfully: {$css_file}");
             } else {
                 error_log("Error writing CSS to file: {$css_file}");
             }
