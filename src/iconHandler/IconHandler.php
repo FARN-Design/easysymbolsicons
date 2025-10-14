@@ -25,7 +25,8 @@ class IconHandler {
         self::$iconsUrl = $upload_dir['baseurl'] . '/ei-icons';
         self::$pluginAssetsDir = EasyIcon::$pluginDirPath . 'assets/ei-icons/';
 
-        $this->initializeIcons();
+        self::generateUnifiedFontCSS();
+        self::enqueueUnifiedFontCSS();
     }
 
     /**
@@ -51,7 +52,7 @@ class IconHandler {
     public static function initializeIcons(): void {
         if (!self::doesIconsDirectoryExist()) {
             self::createIconFolder();
-            self::copyFontsFromAssets();
+            self::addDefaultFonts();
         }
 
         self::generateUnifiedFontCSS();
@@ -59,23 +60,6 @@ class IconHandler {
     }
 
     /**
-     * Retrieves all plugin assets in the plugin assets directory.
-     *
-     * @return array An array of file paths for the plugin assets.
-     */
-    public static function getPluginAssets(): array {
-        $assets = [];
-
-        if (is_dir(self::$pluginAssetsDir)) {
-            $assets = self::getAllFilesAndDirs(self::$pluginAssetsDir);
-        } else {
-            error_log('Plugin assets directory does not exist: ' . self::$pluginAssetsDir);
-        }
-
-        return $assets;
-    }
-
-     /**
      * Adds a custom font by accepting a font file blob.
      * 
      * @param string $fontBlob The content of the font file (binary data).
@@ -147,6 +131,7 @@ class IconHandler {
      * @return array An associative array with font folder names as keys and folder names as values.
      */
     public static function getAvailableFonts(): array {
+
         $fonts = [];
 
         if (!is_dir(self::$iconsDir)) {
@@ -228,14 +213,12 @@ class IconHandler {
         return $font_mappings;
     }
 
-    // Private Helper Functions
-
     /**
      * Checks if the icons directory exists (uploads/ei-icons) and is not empty.
      *
      * @return bool True if the icons directory exists and is not empty, false otherwise.
      */
-    private static function doesIconsDirectoryExist(): bool {
+    public static function doesIconsDirectoryExist(): bool {
         // Check if the directory exists
         if (!is_dir(self::$iconsDir)) {
             return false;
@@ -247,6 +230,8 @@ class IconHandler {
         // If the result is empty, the directory is considered empty
         return !empty($filesAndDirs);
     }
+
+    // Private Helper Functions
 
     /**
      * Validates if the font file is of a valid type (TTF or OTF).
@@ -272,39 +257,43 @@ class IconHandler {
     }
 
     /**
-     * Copies the font files from the plugin's assets folder to the icons directory.
+     * Downloads default fonts from remote URLs and saves them to the icons directory.
+     * This only happens if the user manually clicks the download default fonts from external sources button.
      *
-     * @return void
+     * @return bool
      */
-    private static function copyFontsFromAssets(): void {
-        $plugin_assets_dir = self::$pluginAssetsDir;
+    private static function addDefaultFonts(): bool {
+        $fontUrls = [
+            'fa-solid-900.ttf' => 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/webfonts/fa-solid-900.ttf',
+            'MaterialIcons-Regular.ttf' => 'https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/4.0.0/font/MaterialIcons-Regular.ttf',
+            'fa-solid-900-line-awesome.ttf' => 'https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/font-awesome-line-awesome/webfonts/fa-solid-900.ttf',
+            'dashicons.ttf' => 'https://github.com/WordPress/dashicons/raw/628951563b9c0f0d293af8e40c9b0b3da5e2880d/icon-font/fonts/dashicons.ttf',
+        ];
 
-        if (!is_dir($plugin_assets_dir)) {
-            error_log('Error: Plugin assets directory does not exist.');
-            return;
+        $allSuccess = true;
+
+        foreach ($fontUrls as $filename => $url) {
+            try {
+                $fontBlob = file_get_contents($url);
+                if ($fontBlob === false) {
+                    error_log("EasyIcon: Failed to download font from URL: $url");
+                    $allSuccess = false;
+                    continue;
+                }
+
+                if (!self::addFont($fontBlob, $filename)) {
+                    error_log("EasyIcon: Failed to add font: $filename");
+                    $allSuccess = false;
+                } else {
+                    error_log("EasyIcon: Successfully added font: $filename");
+                }
+            } catch (\Throwable $e) {
+                error_log("EasyIcon Exception when downloading $filename: " . $e->getMessage());
+                $allSuccess = false;
+            }
         }
 
-        $files = self::getAllFilesAndDirs($plugin_assets_dir);
-
-        foreach ($files as $file) {
-            $fontName = basename($file);
-            $fontBlob = file_get_contents($file);
-
-            if ($fontBlob === false) {
-                error_log("Failed to read font file: {$fontName}");
-                continue;
-            }
-            if (empty($fontName) || empty($fontBlob)) {
-                error_log("Invalid font data for file: {$fontName}");
-                continue;
-            }
-
-            if (self::addFont($fontBlob, $fontName)) {
-                error_log("Successfully copied font from assets: {$fontName}");
-            } else {
-                error_log("Failed to copy font from assets: {$fontName}");
-            }
-        }
+        return $allSuccess;
     }
 
     /**

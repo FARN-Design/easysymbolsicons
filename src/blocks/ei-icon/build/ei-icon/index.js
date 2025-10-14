@@ -70,7 +70,7 @@ function Edit({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/?rest_route=/easyicon/v1/fonts');
+        const response = await fetch('/wp-json/easyicon/v1/available-fonts');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -136,13 +136,13 @@ function Edit({
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       ...blockProps,
       className: `${blockProps.className} ${wrapperClass}`,
-      children: selectedIcon.className ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+      children: selectedIcon.className ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
         className: selectedIcon.className,
         style: {
           cursor: 'pointer'
         },
         popovertarget: selectorID
-      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
         popovertarget: selectorID,
         children: __('No Icon Selected', 'easyicon')
       })
