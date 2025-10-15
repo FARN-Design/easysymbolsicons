@@ -140,11 +140,24 @@ class IconHandler {
 
         foreach ($font_files as $file) {
             if (file_exists($file)) {
-                unlink($file);
+                wp_delete_file($file);
             }
         }
 
-        rmdir($font_dir);
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        WP_Filesystem();
+
+        global $wp_filesystem;
+
+        if ( ! $wp_filesystem->rmdir( $font_dir, true ) ) {
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( "Failed to delete directory: " . $font_dir );
+            }
+            return false;
+        }
 
         $loaded_fonts = json_decode(Settings::getSettingFromDB('loaded_fonts'), true) ?? [];
         $loaded_fonts = array_diff($loaded_fonts, [$fontFolder]);
