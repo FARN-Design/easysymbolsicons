@@ -14,10 +14,6 @@
     ],
     "repositories": [
         {
-            "type": "vcs",
-            "url": "git@github.com:FARN-Design/farn-core.git"
-        },
-        {
             "type": "package",
           "package": {
             "name": "phenx/php-font-lib",
@@ -31,7 +27,6 @@
         }
     ],
     "require": {
-        "farn/farn-core": "dev-main",
       "phenx/php-font-lib": "dev-master"
     },
     "require-dev": {

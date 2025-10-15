@@ -14,9 +14,6 @@ Domain Path: src/resources/language
 
 require 'vendor/autoload.php';
 
-use Farn\Core\Log;
-use Farn\Core\Update;
-use Farn\Core\License;
 use Farn\EasyIcon\database\Settings;
 use Farn\EasyIcon\menuPages\SettingsPage;
 use Farn\EasyIcon\blocks\Blocks;
@@ -51,15 +48,7 @@ class EasyIcon
         self::$pathToMainPluginFile = EasyIcon::$pluginDirPath . EasyIcon::$pluginSlug . ".php";
 
         Settings::setup();
-        Log::setup();
         SettingsPage::getInstance();
-
-        if (is_admin()){
-            //TODO Enable License if needed
-            //License::initLicence(self::$software);
-            Update::setup(self::$pluginSlug, self::$software, self::$pathToMainPluginFile, self::$pluginBaseName);
-        }
-
         Blocks::setup();
         IconHandler::getInstance();
 

@@ -2,13 +2,13 @@
 namespace Farn\EasyIcon\menuPages;
 
 
-use Farn\Core\License;
 use Farn\EasyIcon\database\Settings;
 use Farn\EasyIcon\iconHandler\IconHandler;
 
 
 $tab = isset($_GET['tab']) ? wp_unslash($_GET['tab']) : 'default';
 $tab = sanitize_key($tab);
+
 
 $iconDirExists = IconHandler::doesIconsDirectoryExist();
 
@@ -73,14 +73,14 @@ if (!$iconDirExists): ?>
         <a href="?page=ei_settings-page&tab=default" class="nav-tab <?php echo $tab === "default" ? "nav-tab-active" : ""; ?>">
             <?php echo esc_html__("General", "easyicon"); ?>
         </a>
-        <a href="?page=ei_settings-page&tab=fontSelect" class="nav-tab <?php echo $tab === "fontSelect" ? "nav-tab-active" : ""; ?>">
+        <a href="?page=ei_settings-page&tab=fontselect" class="nav-tab <?php echo $tab === "fontselect" ? "nav-tab-active" : ""; ?>">
             <?php echo esc_html__("Font Select", "easyicon"); ?>
         </a>
     </nav>
 <?php
 
 switch ($tab) {
-   case "fontSelect":{
+   case "fontselect":{
        displayFontSelectTab();
        break;
    }
