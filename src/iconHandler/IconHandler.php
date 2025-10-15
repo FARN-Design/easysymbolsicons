@@ -253,8 +253,9 @@ class IconHandler {
                     $font_mappings[$fontFolder] = $glyphs_mapping;
                 }
 
-            } catch (\Exception $e) {
+            } catch (\Exception |\Error $e) {
                 error_log("Error loading font icons for '{$fontFolder}': " . $e->getMessage());
+                var_dump ($e->getTraceAsString());
             }
         }
 
