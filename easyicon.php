@@ -12,7 +12,7 @@ Text Domain: easyvcard
 Domain Path: src/resources/language
 */
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 use Farn\EasyIcon\database\Settings;
 use Farn\EasyIcon\menuPages\SettingsPage;
