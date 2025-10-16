@@ -1,8 +1,8 @@
-const { __ } = wp.i18n;
-const { useState, useEffect } = wp.element;
-const { TextControl } = wp.components;
-const { BlockControls, AlignmentToolbar } = wp.blockEditor;
-const { useBlockProps } = wp.blockEditor;
+import { useState, useEffect } from "@wordpress/element";
+import { TextControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import { BlockControls, AlignmentToolbar } from "@wordpress/block-editor";
+import { useBlockProps } from "@wordpress/block-editor";
 import './editor.scss';
 
 function generateRandomHash() {
