@@ -115,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fontSections.forEach(section => {
             const visibleIcons = section.querySelectorAll('.eif-icon-item:not([style*="display: none"])');
-            // Hide or show font section depending on if it has any visible icons
             if (visibleIcons.length > 0) {
                 section.style.display = 'block';
             } else {
@@ -165,13 +164,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        console.log('Current letter:', currentLetterId);
-
         links.forEach(link => {
             const href = link.getAttribute('href').substring(1);
             if (href === currentLetterId) {
             link.classList.add('active');
-            console.log('Activated link:', href);
             } else {
             link.classList.remove('active');
             }

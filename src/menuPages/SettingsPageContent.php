@@ -104,7 +104,7 @@ function displayAvailableIconsTab() {
                 <?php endforeach; ?>
             </nav>
 
-            <div class="eif-icon-group" style="border: 1px solid #ddd; padding: 1em;">
+            <div class="eif-icon-group">
                 <?php foreach ($icons_by_letter as $letter => $icons): ?>
                     <h3 id="<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eif-alpha-header"><?php echo esc_html($letter); ?></h3>
                     <div class="eif-alpha-group" style="display: flex; flex-wrap: wrap; margin-bottom: 1em;">
