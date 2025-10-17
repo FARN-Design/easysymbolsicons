@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const iconName = icon.getAttribute('data-icon-name');
             const shortcode = `[eif-icon icon="${iconName}"]`;
 
-            // Copy to clipboard
             navigator.clipboard.writeText(shortcode).then(() => {
                 showTooltip(icon, 'Copied!');
             }).catch(err => {
@@ -73,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Tooltip feedback
     function showTooltip(element, message) {
         const tooltip = document.createElement('div');
         tooltip.textContent = message;
@@ -117,48 +115,84 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fontSections.forEach(section => {
             const visibleIcons = section.querySelectorAll('.eif-icon-item:not([style*="display: none"])');
-            console.log(visibleIcons.length + ' ' + section.getAttribute('data-font-name'));
-
+            // Hide or show font section depending on if it has any visible icons
             if (visibleIcons.length > 0) {
                 section.style.display = 'block';
             } else {
                 section.style.display = 'none';
             }
         });
+
+        const alphaNavs = document.querySelectorAll('.eif-alpha-nav');
+        const alphaHeader = document.querySelectorAll('.eif-alpha-header')
+        if (query.length > 0) {
+            alphaNavs.forEach(nav => nav.style.display = 'none');
+            alphaHeader.forEach(a => a.style.display = 'none')
+        } else {
+            alphaNavs.forEach(nav => nav.style.display = '');
+            alphaHeader.forEach(a => a.style.display = '');
+        }
+
+        const alphaGroups = document.querySelectorAll('.eif-alpha-group');
+        alphaGroups.forEach(alphaGroup => {
+            const visibleIcons = alphaGroup.querySelectorAll('.eif-icon-item:not([style*="display: none"])');
+            if (visibleIcons.length > 0) {
+                alphaGroup.style.display = 'flex';
+            } else {
+                alphaGroup.style.display = 'none';
+            }
+        });
     });
 
-    const container = document.getElementById('eif-icons-container');
-    const navLinks = document.querySelectorAll('#eif-icon-alpha-nav a');
+    const offsetTop = 120;
 
-    function onScroll() {
-        const containerRect = container.getBoundingClientRect();
+    document.querySelectorAll('.eif-font-section').forEach(section => {
+        const nav = section.querySelector('.eif-alpha-nav');
+        const links = nav.querySelectorAll('.eif-alpha-link');
+        const letterHeaders = Array.from(section.querySelectorAll('h3[id^="alpha-"]'));
 
-        let currentLetter = null;
-        for (const link of navLinks) {
-            const targetId = link.getAttribute('href').substring(1);
-            const targetElem = document.getElementById(targetId);
-            if (!targetElem) continue;
+        function onScroll() {
+        const scrollY = window.scrollY;
 
-            const targetRect = targetElem.getBoundingClientRect();
+        let currentLetterId = null;
 
-            // We want to find the letter whose anchor is closest to but not below container top
-            if (targetRect.top - containerRect.top <= 10) {
-                currentLetter = targetId.replace('alpha-', '');
-            } else {
-                break; // since anchors are in order, no need to check further
+        for (let i = letterHeaders.length - 1; i >= 0; i--) {
+            const header = letterHeaders[i];
+            const headerTop = header.getBoundingClientRect().top + window.scrollY;
+            if (headerTop - offsetTop <= scrollY + 10) {
+            currentLetterId = header.id;
+            break;
             }
         }
 
-        navLinks.forEach(link => {
-            if (link.textContent === currentLetter) {
-                link.classList.add('active');
+        console.log('Current letter:', currentLetterId);
+
+        links.forEach(link => {
+            const href = link.getAttribute('href').substring(1);
+            if (href === currentLetterId) {
+            link.classList.add('active');
+            console.log('Activated link:', href);
             } else {
-                link.classList.remove('active');
+            link.classList.remove('active');
             }
         });
-    }
+        }
 
-    container.addEventListener('scroll', onScroll);
-    onScroll();
+        window.addEventListener('scroll', onScroll);
 
+        onScroll();
+    });
+
+
+    const buttons = document.querySelectorAll('.eif-font-jump-btn');
+  
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const font = button.getAttribute('data-font');
+            const targetSection = document.querySelector(`.eif-font-section[data-font="${font}"]`);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
 });
