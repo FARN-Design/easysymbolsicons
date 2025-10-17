@@ -16,6 +16,9 @@ $tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'default';
         case "fontselect":
             displayFontSelectTab();
             break;
+        case "availableicons":
+            displayAvailableIconsTab();
+            break;
         case "default":
         default:
             displayGeneralTab();
@@ -33,6 +36,9 @@ function displayTabNavigation($currentTab) {
         </a>
         <a href="?page=eif_settings-page&tab=fontselect" class="nav-tab <?php echo $currentTab === "fontselect" ? "nav-tab-active" : ""; ?>">
             <?php echo esc_html__("Font Select", "easyiconfonts"); ?>
+        </a>
+        <a href="?page=eif_settings-page&tab=availableicons" class="nav-tab <?php echo $currentTab === "availableicons" ? "nav-tab-active" : ""; ?>">
+            <?php echo esc_html__("Available Icons", "easyiconfonts"); ?>
         </a>
     </nav>
     <?php
@@ -53,6 +59,84 @@ function displayGeneralTab() {
             <li><?php echo esc_html__("Supported font formats: TTF and OTF.", "easyiconfonts"); ?></li>
         </ul>
     </section>
+    <?php
+}
+
+function displayAvailableIconsTab() {
+    $all_icons = IconHandler::getLoadedFontGlyphsMapping();
+
+    if (empty($all_icons) || !is_array($all_icons)) {
+        echo '<p>' . esc_html__('No loaded fonts found. Please load fonts in the Font Select tab.', 'easyiconfonts') . '</p>';
+        return;
+    }
+
+    if (empty($all_icons)) {
+        echo '<p>' . esc_html__('No icons found in loaded fonts.', 'easyiconfonts') . '</p>';
+        return;
+    }
+
+    $all_icon_names = [];
+    foreach ($all_icons as $font => $glyphs) {
+        foreach ($glyphs as $iconName => $_) {
+            $all_icon_names[] = $iconName;
+        }
+    }
+    sort($all_icon_names);
+    $unique_first_letters = [];
+    foreach ($all_icon_names as $name) {
+        if (is_string($name) && strlen($name) > 0) {
+            $unique_first_letters[] = strtoupper($name[0]);
+        }
+    }
+    $unique_first_letters = array_unique($unique_first_letters);
+
+    ?>
+    <h2><?php echo esc_html__('Available Icons', 'easyiconfonts'); ?></h2>
+
+    <input type="search" id="eif-icon-search" placeholder="<?php esc_attr_e('Search by icon or font name...', 'easyiconfonts'); ?>" ... >
+
+    <nav id="eif-icon-alpha-nav" style="margin-bottom: 1em;">
+        <?php foreach ($unique_first_letters as $letter): ?>
+            <a href="#alpha-<?php echo esc_attr($letter); ?>" class="eif-alpha-link" style="margin-right:0.5em;"><?php echo esc_html($letter); ?></a>
+        <?php endforeach; ?>
+    </nav>
+
+    <div id="eif-icons-container" style="max-height: 600px; overflow-y: auto; border: 1px solid #ddd; padding: 1em;">
+    <?php foreach ($all_icons as $font => $glyphs): ?>
+        <div class="eif-font-section" data-font-name="<?php echo esc_attr(strtolower($font)); ?>">
+            <h3><?php echo esc_html(ucfirst($font)); ?></h3>
+            <div class="eif-icon-group" style="display: flex; flex-wrap: wrap;">
+                <?php
+$prevLetter = '';
+ksort($glyphs);
+foreach ($glyphs as $iconName => $unicode): 
+    $firstLetter = '';
+    if (is_string($iconName) && strlen($iconName) > 0) {
+        $firstLetter = strtoupper($iconName[0]);
+    }
+    if ($firstLetter !== $prevLetter) {
+        echo '<div id="alpha-' . esc_attr($firstLetter) . '" style="width: 100%;"></div>';
+        $prevLetter = $firstLetter;
+    }
+?>
+    <div class="eif-icon-item"
+        data-icon-name="<?php echo esc_attr($iconName); ?>"
+        data-font-name="<?php echo esc_attr($font); ?>"
+        data-shortcode='[eif-icon icon="<?php echo esc_attr($iconName); ?>"]'
+        data-alpha="<?php echo esc_attr($firstLetter); ?>"
+        style="width: 120px; padding: 0.5em; text-align: center; box-sizing: border-box; cursor: pointer;"
+        title="Click to copy shortcode">
+
+        <div class="eif-icon-clickable" style="display: inline-block;">
+            <span class="eif-<?php echo esc_attr(strtolower($font) . '-' . strtolower($iconName)); ?>"></span>
+            <span class="eif-icon-label" style="font-size: 12px;"><?php echo esc_html($iconName); ?></span>
+        </div>
+    </div>
+<?php endforeach; ?>
+
+            </div>
+        <?php endforeach; ?>
+    </div>
     <?php
 }
 

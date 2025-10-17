@@ -559,6 +559,15 @@ class IconHandler {
                     $css_file_url
                 );
             });
+
+            add_action('admin_enqueue_scripts' , function() use ($css_file_url, $css_file_dir) {
+                wp_enqueue_style(
+                    'easyiconfonts-unified-css',
+                    $css_file_url,
+                    [],
+                    filemtime($css_file_dir)
+                );
+            });
         } else {
             error_log("No unified CSS file found to enqueue.");
         }

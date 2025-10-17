@@ -1,11 +1,7 @@
 <?php
 
 namespace Farn\EasyIconFonts\blocks;
-use EasyIcon\database\Settings;
-use EasyIcon\farnTools\farnLog;
-use Farn\EasyIconFonts\iconHandler\IconHandler;
-use WP_Post;
-use WP_REST_Response;
+
 
 /**
  * Class Blocks
@@ -25,7 +21,11 @@ class Blocks {
      */
 	public static function setup() {
 		add_action( 'init', function () {
-			$block_registered = register_block_type(__DIR__ . '/eif-icon/build/eif-icon');
+        register_block_type(__DIR__ . '/eif-icon/build/eif-icon');
+
+        require_once __DIR__ . '/eif-shortcode/eif-shortcode.php';
+
+        add_shortcode('eif-icon', 'render_eif_icon_shortcode');
 		} );
     }
 }

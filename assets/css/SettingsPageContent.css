@@ -49,3 +49,9 @@
   min-width: 140px;
   cursor: pointer;
 }
+
+#eif-icon-alpha-nav a.active {
+    font-weight: bold;
+    color: #0073aa;
+    text-decoration: underline;
+}
