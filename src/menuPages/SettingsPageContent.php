@@ -1,8 +1,8 @@
 <?php
-namespace Farn\EasyIconFonts\menuPages;
+namespace Farn\EasySymbolsIcons\menuPages;
 
-use Farn\EasyIconFonts\database\Settings;
-use Farn\EasyIconFonts\iconHandler\IconHandler;
+use Farn\EasySymbolsIcons\database\Settings;
+use Farn\EasySymbolsIcons\iconHandler\IconHandler;
 
 $tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'default';
 ?>
@@ -28,10 +28,10 @@ $tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'default';
 function displayTabNavigation($currentTab) {
     ?>
     <nav class="nav-tab-wrapper">
-        <a href="?page=eif_settings-page&tab=default" class="nav-tab <?php echo $currentTab === "default" ? "nav-tab-active" : ""; ?>">
+        <a href="?page=esi_settings-page&tab=default" class="nav-tab <?php echo $currentTab === "default" ? "nav-tab-active" : ""; ?>">
             <?php echo esc_html__("General", "easyiconfonts"); ?>
         </a>
-        <a href="?page=eif_settings-page&tab=fontselect" class="nav-tab <?php echo $currentTab === "fontselect" ? "nav-tab-active" : ""; ?>">
+        <a href="?page=esi_settings-page&tab=fontselect" class="nav-tab <?php echo $currentTab === "fontselect" ? "nav-tab-active" : ""; ?>">
             <?php echo esc_html__("Font Select", "easyiconfonts"); ?>
         </a>
     </nav>
