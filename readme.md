@@ -1,4 +1,4 @@
-# Easy Icon Fonts WordPress Plugin
+# Easy Symbols & Icons WordPress Plugin
 
 ## Requirements
 

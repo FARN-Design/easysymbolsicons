@@ -1,6 +1,6 @@
-=== Easy Icon Fonts===
+=== Easy Symbol & Icons ===
 Contributors: farndesign
-Tags: icons, icon fonts, font management, block editor, easy icon
+Tags: icons, icon fonts, font management, block editor, easy symbol icon
 Requires at least: 6.2
 Tested up to: 6.8
 Stable tag: 1.0.0

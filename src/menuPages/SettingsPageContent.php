@@ -127,10 +127,10 @@ function displayAvailableIconsTab() {
             </div>
         </section>
         <?php endforeach; ?>
-    </div><?
-}
+    </div><?php
+    }
 
-function displayFontSelectTab() {
+    function displayFontSelectTab() {
     $iconDirExists = IconHandler::doesIconsDirectoryExist();
 
     if (!$iconDirExists) {
