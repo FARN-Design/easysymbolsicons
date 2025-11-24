@@ -16,13 +16,13 @@ class RestHandler {
      * Register all REST API routes.
      */
     public static function register_routes() {
-        register_rest_route('easyiconfonts/v1', '/loaded-fonts', [
+        register_rest_route('easysymbolsicons/v1', '/loaded-fonts', [
             'methods'  => 'GET',
             'callback' => [self::class, 'get_loaded_fonts'],
             'permission_callback' => '__return_true',
         ]);
 
-        register_rest_route('easyiconfonts/v1', '/download-default-fonts', [
+        register_rest_route('easysymbolsicons/v1', '/download-default-fonts', [
             'methods'  => 'POST',
             'callback' => [self::class, 'download_default_fonts'],
             'permission_callback' => function () {

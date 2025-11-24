@@ -24,7 +24,7 @@ export default function Edit({ attributes, setAttributes }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/wp-json/easyiconfonts/v1/loaded-fonts');
+                const response = await fetch('/wp-json/easysymbolsicons/v1/loaded-fonts');
 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -120,7 +120,7 @@ export default function Edit({ attributes, setAttributes }) {
                     ></button>
                 ) : (
                     <button popovertarget={selectorID}>
-                        {__('No Icon Selected', 'easyiconfonts')}
+                        {__('No Icon Selected', 'easysymbolsicons')}
                     </button>
                 )}
             </div>
@@ -131,13 +131,13 @@ export default function Edit({ attributes, setAttributes }) {
                         <TextControl
                             value={searchTerm}
                             onChange={(value) => setSearchTerm(value)}
-                            placeholder={__('search icon by glyph name...', 'easyiconfonts')}
+                            placeholder={__('search icon by glyph name...', 'easysymbolsicons')}
                         />
                     </div>
 
                     <div className="esi-icon-font-selects">
-                    {loading && <p>{__('Loading fonts...', 'easyiconfonts')}</p>}
-                    {error && <p>{__('Error: ', 'easyiconfonts')}{error}</p>}
+                    {loading && <p>{__('Loading fonts...', 'easysymbolsicons')}</p>}
+                    {error && <p>{__('Error: ', 'easysymbolsicons')}{error}</p>}
                     {!loading && !error && filteredFonts.length > 0 && (
                         filteredFonts.map((font, index) => (
                             <details key={index} className="esi-font-details">
@@ -164,10 +164,10 @@ export default function Edit({ attributes, setAttributes }) {
                     </div>
 
 					{!loading && !error && filteredFonts.length === 0 && (
-						<p>{__("No fonts found", "easyiconfonts")}</p>
+						<p>{__("No fonts found", "easysymbolsicons")}</p>
 					)}
 				</div>
-			}
+			)}
 		</>
 	);
 }

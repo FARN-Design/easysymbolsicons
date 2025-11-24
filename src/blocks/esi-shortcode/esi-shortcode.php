@@ -1,13 +1,13 @@
 <?php
 
-function render_eif_icon_shortcode($attributes) {
+function render_esi_icon_shortcode($attributes) {
     $attributes = shortcode_atts([
         'icon' => '',
     ], $attributes);
 
     $iconKey = trim($attributes['icon']);
     if (empty($iconKey)) {
-        return '<span class="eif-icon">?</span>';
+        return '<span class="esi-icon">?</span>';
     }
 
     $fontFamily = '';
@@ -21,14 +21,14 @@ function render_eif_icon_shortcode($attributes) {
         $iconName = sanitize_html_class(strtolower($iconKey));
     }
 
-    $response = wp_remote_get(home_url('/wp-json/easyiconfonts/v1/loaded-fonts'));
+    $response = wp_remote_get(home_url('/wp-json/easysymbolsicons/v1/loaded-fonts'));
 
     if (is_wp_error($response)) {
-        $response = wp_remote_get(home_url('/?rest_route=/easyiconfonts/v1/loaded-fonts'));
+        $response = wp_remote_get(home_url('/?rest_route=/easysymbolsicons/v1/loaded-fonts'));
     }
 
     if (is_wp_error($response)) {
-        return '<span class="eif-icon">?</span>';
+        return '<span class="esi-icon">?</span>';
     }
 
     $body = wp_remote_retrieve_body($response);
@@ -36,7 +36,7 @@ function render_eif_icon_shortcode($attributes) {
 
     if (!is_array($fonts)) {
         error_log('Failed to decode JSON response for loaded fonts: ' . $body);
-        return '<span class="eif-icon">?</span>';
+        return '<span class="esi-icon">?</span>';
     }
 
     if (!empty($fontFamily)) {
@@ -50,7 +50,7 @@ function render_eif_icon_shortcode($attributes) {
         }
 
         if ($realFontKey !== null && isset($fonts[$realFontKey][$iconName])) {
-            return '<span class="eif-' . esc_attr($fontFamily) . '__' . esc_attr($iconName) . '"></span>';
+            return '<span class="esi-' . esc_attr($fontFamily) . '__' . esc_attr($iconName) . '"></span>';
         }
     }
 
@@ -64,14 +64,14 @@ function render_eif_icon_shortcode($attributes) {
 
         if (count($matches) === 1) {
             $fontFamily = sanitize_html_class(strtolower($matches[0]));
-            return '<span class="eif-' . esc_attr($fontFamily) . '__' . esc_attr($iconName) . '"></span>';
-        } elseif (count($matches) > 1) {
+            return '<span class="esi-' . esc_attr($fontFamily) . '__' . esc_attr($iconName) . '"></span>';
+        } else if (count($matches) > 1) {
             error_log("Icon '{$iconName}' found in multiple fonts: " . implode(', ', $matches));
         } else {
             error_log("Icon '{$iconName}' not found in any loaded font.");
         }
     }
 
-    return '<span class="eif-icon">?</span>';
+    return '<span class="esi-icon">?</span>';
 }
 

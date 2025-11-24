@@ -22,9 +22,9 @@ class IconHandler {
      */
     private function __construct() {
         $upload_dir = wp_upload_dir();
-        self::$iconsDir = $upload_dir['basedir'] . '/eif-icons';
-        self::$iconsUrl = $upload_dir['baseurl'] . '/eif-icons';
-        self::$pluginAssetsDir = EasyIcon::$pluginDirPath . 'assets/eif-icons/';
+        self::$iconsDir = $upload_dir['basedir'] . '/esi-icons';
+        self::$iconsUrl = $upload_dir['baseurl'] . '/esi-icons';
+        self::$pluginAssetsDir = EasyIcon::$pluginDirPath . 'assets/esi-icons/';
 
         self::generateUnifiedFontCSS();
         self::enqueueUnifiedFontCSS();
@@ -277,7 +277,7 @@ class IconHandler {
     }
 
     /**
-     * Checks if the icons directory exists (uploads/eif-icons) and is not empty.
+     * Checks if the icons directory exists (uploads/esi-icons) and is not empty.
      *
      * @return bool True if the icons directory exists and is not empty, false otherwise.
      */
@@ -485,7 +485,7 @@ class IconHandler {
             return;
         }
 
-        $previous_loaded_fonts_json = get_option('eif_prev_loaded_fonts', '[]');
+        $previous_loaded_fonts_json = get_option('esi_prev_loaded_fonts', '[]');
         $previous_loaded_fonts = json_decode($previous_loaded_fonts_json, true);
 
         if ($enabled_fonts === $previous_loaded_fonts) {
@@ -515,9 +515,9 @@ class IconHandler {
                 $font_name = Font::load($font_file)->getFontName();
 
                 $css_output .= "@font-face{font-family:'{$font_name}';src:url('". self::$iconsUrl ."/{$fontFolder}/" . basename($font_file) ."') format('truetype');}";
-                $css_output .= '[class^="eif-' . strtolower($fontFolder) . '-"]{font-family:"' . $font_name . '";}';
+                $css_output .= '[class^="esi-' . strtolower($fontFolder) . '-"]{font-family:"' . $font_name . '";}';
                 foreach ($font_mappings[$fontFolder] as $glyph_name => $unicode_hex) {
-                    $class = '.eif-' . strtolower($fontFolder) . '-' . strtolower($glyph_name);
+                    $class = '.esi-' . strtolower($fontFolder) . '-' . strtolower($glyph_name);
                     $css_output .= "{$class}::before{content:\"{$unicode_hex}\";}";
                 }
             } catch (\Exception $e) {
@@ -532,7 +532,7 @@ class IconHandler {
             }
         }
 
-        update_option('eif_prev_loaded_fonts', json_encode($enabled_fonts));
+        update_option('esi_prev_loaded_fonts', json_encode($enabled_fonts));
     }
 
     /**
@@ -548,7 +548,7 @@ class IconHandler {
         if (file_exists($css_file_dir)) {
             add_action('wp_enqueue_scripts', function() use ($css_file_url, $css_file_dir) {
                 wp_enqueue_style(
-                    'easyiconfonts-unified-css',
+                    'easysymbolsicons-unified-css',
                     $css_file_url,
                     [],
                     filemtime($css_file_dir)

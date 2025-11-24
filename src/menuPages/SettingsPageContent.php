@@ -8,7 +8,7 @@ $tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'default';
 ?>
 
 <div class="wrap">
-    <h1><?php echo esc_html__("Settings", "easyiconfonts"); ?></h1>
+    <h1><?php echo esc_html__("Settings", "easysymbolsicons"); ?></h1>
     <?php displayTabNavigation($tab); ?>
     
     <?php
@@ -32,13 +32,13 @@ function displayTabNavigation($currentTab) {
     ?>
     <nav class="nav-tab-wrapper">
         <a href="?page=esi_settings-page&tab=default" class="nav-tab <?php echo $currentTab === "default" ? "nav-tab-active" : ""; ?>">
-            <?php echo esc_html__("General", "easyiconfonts"); ?>
+            <?php echo esc_html__("General", "easysymbolsicons"); ?>
         </a>
         <a href="?page=esi_settings-page&tab=fontselect" class="nav-tab <?php echo $currentTab === "fontselect" ? "nav-tab-active" : ""; ?>">
-            <?php echo esc_html__("Font Select", "easyiconfonts"); ?>
+            <?php echo esc_html__("Font Select", "easysymbolsicons"); ?>
         </a>
-        <a href="?page=eif_settings-page&tab=availableicons" class="nav-tab <?php echo $currentTab === "availableicons" ? "nav-tab-active" : ""; ?>">
-            <?php echo esc_html__("Available Icons", "easyiconfonts"); ?>
+        <a href="?page=esi_settings-page&tab=availableicons" class="nav-tab <?php echo $currentTab === "availableicons" ? "nav-tab-active" : ""; ?>">
+            <?php echo esc_html__("Available Icons", "easysymbolsicons"); ?>
         </a>
     </nav>
     <?php
@@ -46,17 +46,17 @@ function displayTabNavigation($currentTab) {
 
 function displayGeneralTab() {
     ?>
-    <h2><?php echo esc_html__("EasyIcon", "easyiconfonts"); ?></h2>
+    <h2><?php echo esc_html__("EasyIcon", "easysymbolsicons"); ?></h2>
     <hr class="wp-header-end">
 
-    <p><?php echo esc_html__("Manage your icon fonts and use them easily.", "easyiconfonts"); ?></p>
+    <p><?php echo esc_html__("Manage your icon fonts and use them easily.", "easysymbolsicons"); ?></p>
 
     <section style="margin-top: 2em;">
-        <h2><?php echo esc_html__("Quick Start", "easyiconfonts"); ?></h2>
+        <h2><?php echo esc_html__("Quick Start", "easysymbolsicons"); ?></h2>
         <ul>
-            <li><?php echo esc_html__("Upload and manage icon fonts on the Font Select tab.", "easyiconfonts"); ?></li>
-            <li><?php echo esc_html__("Add icons in posts and pages using the 'eif-icon' block.", "easyiconfonts"); ?></li>
-            <li><?php echo esc_html__("Supported font formats: TTF and OTF.", "easyiconfonts"); ?></li>
+            <li><?php echo esc_html__("Upload and manage icon fonts on the Font Select tab.", "easysymbolsicons"); ?></li>
+            <li><?php echo esc_html__("Add icons in posts and pages using the 'esi-icon' block.", "easysymbolsicons"); ?></li>
+            <li><?php echo esc_html__("Supported font formats: TTF and OTF.", "easysymbolsicons"); ?></li>
         </ul>
     </section>
     <?php
@@ -66,26 +66,26 @@ function displayAvailableIconsTab() {
     $all_icons = IconHandler::getLoadedFontGlyphsMapping();
 
     if (empty($all_icons) || !is_array($all_icons)) {
-        echo '<p>' . esc_html__('No loaded fonts found. Please load fonts in the Font Select tab.', 'easyiconfonts') . '</p>';
+        echo '<p>' . esc_html__('No loaded fonts found. Please load fonts in the Font Select tab.', 'easysymbolsicons') . '</p>';
         return;
     }
 
     $font_names = array_keys($all_icons);
     ?>
 
-    <h2><?php echo esc_html__('Available Icons', 'easyiconfonts'); ?></h2>
+    <h2><?php echo esc_html__('Available Icons', 'easysymbolsicons'); ?></h2>
 
-    <input type="search" id="eif-icon-search" placeholder="<?php esc_attr_e('Search by icon or font name...', 'easyiconfonts'); ?>" style="width: 100%; padding: 0.5em; margin-bottom: 1em; font-size: 1rem;">
+    <input type="search" id="esi-icon-search" placeholder="<?php esc_attr_e('Search by icon or font name...', 'easysymbolsicons'); ?>" style="width: 100%; padding: 0.5em; margin-bottom: 1em; font-size: 1rem;">
 
-    <nav id="eif-fonts-nav" style="display: flex; gap: 1em; overflow-x: auto; margin-bottom: 1em;">
+    <nav id="esi-fonts-nav" style="display: flex; gap: 1em; overflow-x: auto; margin-bottom: 1em;">
         <?php foreach ($font_names as $font): ?>
-            <button class="eif-font-jump-btn" data-font="<?php echo esc_attr($font); ?>" style="padding: 0.5em 1em; cursor: pointer;">
+            <button class="esi-font-jump-btn" data-font="<?php echo esc_attr($font); ?>" style="padding: 0.5em 1em; cursor: pointer;">
                 <?php echo esc_html(ucfirst($font)); ?>
             </button>
         <?php endforeach; ?>
     </nav>
 
-    <div id="eif-icons-wrapper">
+    <div id="esi-icons-wrapper">
         <?php foreach ($all_icons as $font => $glyphs): 
             $icons_by_letter = [];
             foreach ($glyphs as $iconName => $_) {
@@ -95,30 +95,30 @@ function displayAvailableIconsTab() {
             }
             ksort($icons_by_letter);
         ?>
-        <section class="eif-font-section" id="font-<?php echo esc_attr($font); ?>" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 3em;">
+        <section class="esi-font-section" id="font-<?php echo esc_attr($font); ?>" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 3em;">
             <h2><?php echo esc_html(ucfirst($font)); ?></h2>
 
-            <nav class="eif-alpha-nav" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 1em;">
+            <nav class="esi-alpha-nav" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 1em;">
                 <?php foreach ($icons_by_letter as $letter => $_): ?>
-                    <a href="#<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eif-alpha-link"><?php echo esc_html($letter); ?></a>
+                    <a href="#<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="esi-alpha-link"><?php echo esc_html($letter); ?></a>
                 <?php endforeach; ?>
             </nav>
 
-            <div class="eif-icon-group">
+            <div class="esi-icon-group">
                 <?php foreach ($icons_by_letter as $letter => $icons): ?>
-                    <h3 id="<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eif-alpha-header"><?php echo esc_html($letter); ?></h3>
-                    <div class="eif-alpha-group" style="display: flex; flex-wrap: wrap; margin-bottom: 1em;">
+                    <h3 id="<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="esi-alpha-header"><?php echo esc_html($letter); ?></h3>
+                    <div class="esi-alpha-group" style="display: flex; flex-wrap: wrap; margin-bottom: 1em;">
                         <?php foreach ($icons as $iconName => $unicode): ?>
-                            <div class="eif-icon-item"
+                            <div class="esi-icon-item"
                                 data-icon-name="<?php echo esc_attr($iconName); ?>"
                                 data-font-name="<?php echo esc_attr($font); ?>"
-                                data-shortcode='[eif-icon icon="<?php echo esc_attr($iconName); ?>"]'
+                                data-shortcode='[esi-icon icon="<?php echo esc_attr($iconName); ?>"]'
                                 style="width: 120px; padding: 0.5em; text-align: center; box-sizing: border-box; cursor: pointer;"
                                 title="Click to copy shortcode">
 
-                                <div class="eif-icon-clickable" style="display: inline-block;">
-                                    <span class="eif-<?php echo esc_attr(strtolower($font) . '__' . strtolower($iconName)); ?>"></span>
-                                    <span class="eif-icon-label" style="font-size: 12px;"><?php echo esc_html($iconName); ?></span>
+                                <div class="esi-icon-clickable" style="display: inline-block;">
+                                    <span class="esi-<?php echo esc_attr(strtolower($font) . '__' . strtolower($iconName)); ?>"></span>
+                                    <span class="esi-icon-label" style="font-size: 12px;"><?php echo esc_html($iconName); ?></span>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -139,12 +139,12 @@ function displayFontSelectTab() {
 
     ?>
     <form method="post">
-        <h2><?php echo esc_html__("Choose Icon Fonts to Load", "easyiconfonts"); ?></h2>
+        <h2><?php echo esc_html__("Choose Icon Fonts to Load", "easysymbolsicons"); ?></h2>
         <?php displayFontSelectionForm(); ?>
     </form>
 
     <form method="post" enctype="multipart/form-data">
-        <h2><?php echo esc_html__("Upload Custom Font", "easyiconfonts"); ?></h2>
+        <h2><?php echo esc_html__("Upload Custom Font", "easysymbolsicons"); ?></h2>
         <?php displayCustomFontUploadForm(); ?>
     </form>
     <?php
@@ -154,31 +154,31 @@ function displayFontSelectionForm() {
     $selected_fonts = json_decode(Settings::getSettingFromDB('loaded_fonts'), true) ?? [];
     $available_fonts = IconHandler::getAvailableFonts();
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['easyiconfonts_fonts_nonce']) && wp_verify_nonce($_POST['easyiconfonts_fonts_nonce'], 'save_easyiconfonts_fonts')) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['easysymbolsicons_fonts_nonce']) && wp_verify_nonce($_POST['easysymbolsicons_fonts_nonce'], 'save_easysymbolsicons_fonts')) {
         $selected_fonts = handleFontSelectionSave($selected_fonts);
     }
 
-    wp_nonce_field('save_easyiconfonts_fonts', 'easyiconfonts_fonts_nonce');
+    wp_nonce_field('save_easysymbolsicons_fonts', 'easysymbolsicons_fonts_nonce');
     
     if (!empty($available_fonts)) {
         foreach ($available_fonts as $font_folder => $font_label) {
             displayFontCheckbox($font_folder, $font_label, $selected_fonts);
         }
     } else {
-        echo '<p>' . esc_html__("No available fonts found. Please upload font files.", "easyiconfonts") . '</p>';
+        echo '<p>' . esc_html__("No available fonts found. Please upload font files.", "easysymbolsicons") . '</p>';
     }
 
-    echo '<p><input type="submit" class="button button-primary" value="' . esc_html__("Save Font Selection", "easyiconfonts") . '"></p>';
+    echo '<p><input type="submit" class="button button-primary" value="' . esc_html__("Save Font Selection", "easysymbolsicons") . '"></p>';
 }
 
 function displayCustomFontUploadForm() {
     ?>
-    <label for="custom_font_upload"><?php echo esc_html__("Select Font File (TTF or OTF)", "easyiconfonts"); ?>:</label>
+    <label for="custom_font_upload"><?php echo esc_html__("Select Font File (TTF or OTF)", "easysymbolsicons"); ?>:</label>
     <input type="file" name="custom_font" id="custom_font_upload" accept=".ttf,.otf" required>
 
     <?php wp_nonce_field('upload_custom_font', 'upload_custom_font_nonce'); ?>
     
-    <p><input type="submit" class="button button-primary" value="<?php echo esc_html__("Upload Font", "easyiconfonts"); ?>"></p>
+    <p><input type="submit" class="button button-primary" value="<?php echo esc_html__("Upload Font", "easysymbolsicons"); ?>"></p>
     <?php
 }
 
@@ -187,7 +187,7 @@ function handleFontSelectionSave($selected_fonts) {
     $fonts = !empty($fonts_raw) && is_array($fonts_raw) ? array_map('sanitize_text_field', $fonts_raw) : [];
 
     Settings::saveSettingInDB('loaded_fonts', json_encode($fonts));
-    echo '<div class="updated notice"><p>' . esc_html__("Settings saved.", "easyiconfonts") . '</p></div>';
+    echo '<div class="updated notice"><p>' . esc_html__("Settings saved.", "easysymbolsicons") . '</p></div>';
 
     return $fonts;
 }
@@ -201,7 +201,7 @@ function displayFontCheckbox($font_folder, $font_label, $selected_fonts) {
         </label><br>
         
         <button type="button" class="button button-secondary remove-font" data-font="<?php echo esc_attr($font_folder); ?>">
-            <?php echo esc_html__("Remove", "easyiconfonts"); ?>
+            <?php echo esc_html__("Remove", "easysymbolsicons"); ?>
         </button>
     </div>
     <?php
@@ -211,16 +211,16 @@ function displayFontPopup() {
     ?>
     <div id="default-fonts-popup" style="display:none;">
         <div>
-            <h2><?php echo esc_html__("No Icon Fonts Available", "easyiconfonts"); ?></h2>
-            <p><?php echo esc_html__("No icon fonts are currently installed. You can choose to download a set of default fonts from external sources, or upload your own custom fonts instead.", "easyiconfonts"); ?></p>
+            <h2><?php echo esc_html__("No Icon Fonts Available", "easysymbolsicons"); ?></h2>
+            <p><?php echo esc_html__("No icon fonts are currently installed. You can choose to download a set of default fonts from external sources, or upload your own custom fonts instead.", "easysymbolsicons"); ?></p>
             <div>
-                <?php echo esc_html__("Note: Default fonts will be downloaded from trusted sources only – JSDelivr CDN and the official WordPress Dashicons GitHub repository.", "easyiconfonts"); ?>
+                <?php echo esc_html__("Note: Default fonts will be downloaded from trusted sources only – JSDelivr CDN and the official WordPress Dashicons GitHub repository.", "easysymbolsicons"); ?>
             </div>
             <button id="download-default-fonts" class="button button-primary">
-                <?php echo esc_html__("Download Default Fonts", "easyiconfonts"); ?>
+                <?php echo esc_html__("Download Default Fonts", "easysymbolsicons"); ?>
             </button>
             <button id="close-popup" class="button">
-                <?php echo esc_html__("I'll Upload My Own", "easyiconfonts"); ?>
+                <?php echo esc_html__("I'll Upload My Own", "easysymbolsicons"); ?>
             </button>
         </div>
     </div>
@@ -232,15 +232,15 @@ function handleFontRemoval() {
         $font_to_remove = wp_unslash($_POST['font_to_remove']);
         $remove_font_nonce = wp_unslash($_POST['remove_font_nonce']);
         
-        if (wp_verify_nonce($remove_font_nonce, 'remove_easyiconfonts_font')) {
+        if (wp_verify_nonce($remove_font_nonce, 'remove_easysymbolsicons_font')) {
             $font_to_remove = sanitize_text_field($font_to_remove);
             if (!empty($font_to_remove)) {
                 $remove_result = IconHandler::removeFont($font_to_remove);
 
                 echo '<div class="updated notice"><p>';
                 echo $remove_result
-                    ? esc_html__("Font removed successfully.", "easyiconfonts")
-                    : esc_html__("Failed to remove the font.", "easyiconfonts");
+                    ? esc_html__("Font removed successfully.", "easysymbolsicons")
+                    : esc_html__("Failed to remove the font.", "easysymbolsicons");
                 echo '</p></div>';
             }
         }
@@ -257,7 +257,7 @@ function handleCustomFontUpload() {
             $valid_extensions = ['ttf', 'otf'];
             
             if (!in_array(strtolower($file_extension), $valid_extensions)) {
-                echo '<div class="error notice"><p>' . esc_html__("Invalid font type. Only TTF and OTF are supported.", "easyiconfonts") . '</p></div>';
+                echo '<div class="error notice"><p>' . esc_html__("Invalid font type. Only TTF and OTF are supported.", "easysymbolsicons") . '</p></div>';
             } else {
                 $file_blob = file_get_contents($uploaded_file['tmp_name']);
                 $font_name = sanitize_file_name($uploaded_file['name']);
@@ -265,8 +265,8 @@ function handleCustomFontUpload() {
 
                 echo '<div class="updated notice"><p>';
                 echo $font_added
-                    ? esc_html__("Font uploaded and added successfully.", "easyiconfonts")
-                    : esc_html__("Failed to add the font.", "easyiconfonts");
+                    ? esc_html__("Font uploaded and added successfully.", "easysymbolsicons")
+                    : esc_html__("Failed to add the font.", "easysymbolsicons");
                 echo '</p></div>';
             }
         }

@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: Easy Symbols & Icons
-Plugin URI: https://github.com/FARN-Design/easyiconfonts
+Plugin URI: https://github.com/FARN-Design/easysymbolsicons
 Description: A plugin to load and use various icon fonts with ease.
 Version: 1.0.0
 Author: Farnlabs

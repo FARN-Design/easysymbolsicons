@@ -60,13 +60,13 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    const iconItems = document.querySelectorAll(".eif-icon-item");
+    const iconItems = document.querySelectorAll(".esi-icon-item");
 
     iconItems.forEach((icon) => {
         icon.addEventListener("click", () => {
             const iconName = icon.getAttribute("data-icon-name");
             const fontName = icon.getAttribute("data-font-name");
-            const shortcode = `[eif-icon icon="${fontName}__${iconName}"]`;
+            const shortcode = `[esi-icon icon="${fontName}__${iconName}"]`;
 
             copyToClipboard(shortcode)
                 .then(() => showTooltip(icon, "Copied!"))
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 1200);
     }
 
-    const searchInput = document.getElementById("eif-icon-search");
+    const searchInput = document.getElementById("esi-icon-search");
 
     searchInput.addEventListener("input", function () {
         const query = this.value.toLowerCase();
@@ -139,11 +139,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        const fontSections = document.querySelectorAll(".eif-font-section");
+        const fontSections = document.querySelectorAll(".esi-font-section");
 
         fontSections.forEach((section) => {
             const visibleIcons = section.querySelectorAll(
-                '.eif-icon-item:not([style*="display: none"])'
+                '.esi-icon-item:not([style*="display: none"])'
             );
             if (visibleIcons.length > 0) {
                 section.style.display = "block";
@@ -152,8 +152,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        const alphaNavs = document.querySelectorAll(".eif-alpha-nav");
-        const alphaHeader = document.querySelectorAll(".eif-alpha-header");
+        const alphaNavs = document.querySelectorAll(".esi-alpha-nav");
+        const alphaHeader = document.querySelectorAll(".esi-alpha-header");
         if (query.length > 0) {
             alphaNavs.forEach((nav) => (nav.style.display = "none"));
             alphaHeader.forEach((a) => (a.style.display = "none"));
@@ -162,10 +162,10 @@ document.addEventListener("DOMContentLoaded", function () {
             alphaHeader.forEach((a) => (a.style.display = ""));
         }
 
-        const alphaGroups = document.querySelectorAll(".eif-alpha-group");
+        const alphaGroups = document.querySelectorAll(".esi-alpha-group");
         alphaGroups.forEach((alphaGroup) => {
             const visibleIcons = alphaGroup.querySelectorAll(
-                '.eif-icon-item:not([style*="display: none"])'
+                '.esi-icon-item:not([style*="display: none"])'
             );
             if (visibleIcons.length > 0) {
                 alphaGroup.style.display = "flex";
@@ -177,9 +177,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const offsetTop = 120;
 
-    document.querySelectorAll(".eif-font-section").forEach((section) => {
-        const nav = section.querySelector(".eif-alpha-nav");
-        const links = nav.querySelectorAll(".eif-alpha-link");
+    document.querySelectorAll(".esi-font-section").forEach((section) => {
+        const nav = section.querySelector(".esi-alpha-nav");
+        const links = nav.querySelectorAll(".esi-alpha-link");
         const letterHeaders = Array.from(
             section.querySelectorAll('h3[id^="alpha-"]')
         );
@@ -214,13 +214,13 @@ document.addEventListener("DOMContentLoaded", function () {
         onScroll();
     });
 
-    const buttons = document.querySelectorAll(".eif-font-jump-btn");
+    const buttons = document.querySelectorAll(".esi-font-jump-btn");
 
     buttons.forEach((button) => {
         button.addEventListener("click", () => {
             const font = button.getAttribute("data-font");
             const targetSection = document.querySelector(
-                `.eif-font-section[data-font="${font}"]`
+                `.esi-font-section[data-font="${font}"]`
             );
             if (targetSection) {
                 targetSection.scrollIntoView({ behavior: "smooth" });

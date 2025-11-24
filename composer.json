@@ -1,5 +1,5 @@
 {
-    "name": "farn/easyiconfonts",
+    "name": "farn/easysymbolsicons",
     "type": "wordpress-plugin",
     "autoload": {
         "psr-4": {

@@ -21,7 +21,7 @@
    - Save your changes.
 
 4. **Using the Icon Block**
-   Add the `eif-icon` block in the editor, click on the block, then select an icon from the appearing menu.
+   Add the `esi-icon` block in the editor, click on the block, then select an icon from the appearing menu.
 
 ### Notes
 

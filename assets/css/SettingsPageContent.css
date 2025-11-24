@@ -50,7 +50,7 @@
   cursor: pointer;
 }
 
-#eif-icon-search, #eif-fonts-nav {
+#esi-icon-search, #esi-fonts-nav {
   position: sticky;
   top: 0;
   background: white;
@@ -59,11 +59,11 @@
   padding-bottom: 0.5em;
   border-bottom: 1px solid #ddd;
 }
-#eif-fonts-nav {
+#esi-fonts-nav {
   margin-bottom: 1em;
 }
 
-.eif-font-section h2 {
+.esi-font-section h2 {
   position: sticky;
   top: 60px; /* Height of search + nav bars combined */
   background: white;
@@ -74,7 +74,7 @@
   border-bottom: 1px solid #ccc;
 }
 
-.eif-alpha-nav {
+.esi-alpha-nav {
   position: sticky;
   top: 100px; /* slightly below h2 */
   background: white;
@@ -83,7 +83,7 @@
   border-bottom: 1px solid #eee;
 }
 
-.eif-alpha-link.active {
+.esi-alpha-link.active {
   font-weight: bold;
   color: #0073aa; /* example highlight color */
   text-decoration: underline;
