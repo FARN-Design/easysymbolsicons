@@ -163,11 +163,11 @@ export default function Edit({ attributes, setAttributes }) {
                     )}
                     </div>
 
-                    {!loading && !error && filteredFonts.length === 0 && (
-                        <p>{__('No fonts found', 'easyiconfonts')}</p>
-                    )}
-                </div>
-            )}
-        </>
-    );
+					{!loading && !error && filteredFonts.length === 0 && (
+						<p>{__("No fonts found", "easyiconfonts")}</p>
+					)}
+				</div>
+			}
+		</>
+	);
 }

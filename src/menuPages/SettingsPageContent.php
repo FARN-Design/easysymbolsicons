@@ -16,6 +16,9 @@ $tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'default';
         case "fontselect":
             displayFontSelectTab();
             break;
+        case "availableicons":
+            displayAvailableIconsTab();
+            break;
         case "default":
         default:
             displayGeneralTab();
@@ -33,6 +36,9 @@ function displayTabNavigation($currentTab) {
         </a>
         <a href="?page=esi_settings-page&tab=fontselect" class="nav-tab <?php echo $currentTab === "fontselect" ? "nav-tab-active" : ""; ?>">
             <?php echo esc_html__("Font Select", "easyiconfonts"); ?>
+        </a>
+        <a href="?page=eif_settings-page&tab=availableicons" class="nav-tab <?php echo $currentTab === "availableicons" ? "nav-tab-active" : ""; ?>">
+            <?php echo esc_html__("Available Icons", "easyiconfonts"); ?>
         </a>
     </nav>
     <?php
@@ -54,6 +60,74 @@ function displayGeneralTab() {
         </ul>
     </section>
     <?php
+}
+
+function displayAvailableIconsTab() {
+    $all_icons = IconHandler::getLoadedFontGlyphsMapping();
+
+    if (empty($all_icons) || !is_array($all_icons)) {
+        echo '<p>' . esc_html__('No loaded fonts found. Please load fonts in the Font Select tab.', 'easyiconfonts') . '</p>';
+        return;
+    }
+
+    $font_names = array_keys($all_icons);
+    ?>
+
+    <h2><?php echo esc_html__('Available Icons', 'easyiconfonts'); ?></h2>
+
+    <input type="search" id="eif-icon-search" placeholder="<?php esc_attr_e('Search by icon or font name...', 'easyiconfonts'); ?>" style="width: 100%; padding: 0.5em; margin-bottom: 1em; font-size: 1rem;">
+
+    <nav id="eif-fonts-nav" style="display: flex; gap: 1em; overflow-x: auto; margin-bottom: 1em;">
+        <?php foreach ($font_names as $font): ?>
+            <button class="eif-font-jump-btn" data-font="<?php echo esc_attr($font); ?>" style="padding: 0.5em 1em; cursor: pointer;">
+                <?php echo esc_html(ucfirst($font)); ?>
+            </button>
+        <?php endforeach; ?>
+    </nav>
+
+    <div id="eif-icons-wrapper">
+        <?php foreach ($all_icons as $font => $glyphs): 
+            $icons_by_letter = [];
+            foreach ($glyphs as $iconName => $_) {
+                if (!is_string($iconName) || strlen($iconName) === 0) continue;
+                $letter = strtoupper($iconName[0]);
+                $icons_by_letter[$letter][$iconName] = $_;
+            }
+            ksort($icons_by_letter);
+        ?>
+        <section class="eif-font-section" id="font-<?php echo esc_attr($font); ?>" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 3em;">
+            <h2><?php echo esc_html(ucfirst($font)); ?></h2>
+
+            <nav class="eif-alpha-nav" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 1em;">
+                <?php foreach ($icons_by_letter as $letter => $_): ?>
+                    <a href="#<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eif-alpha-link"><?php echo esc_html($letter); ?></a>
+                <?php endforeach; ?>
+            </nav>
+
+            <div class="eif-icon-group">
+                <?php foreach ($icons_by_letter as $letter => $icons): ?>
+                    <h3 id="<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eif-alpha-header"><?php echo esc_html($letter); ?></h3>
+                    <div class="eif-alpha-group" style="display: flex; flex-wrap: wrap; margin-bottom: 1em;">
+                        <?php foreach ($icons as $iconName => $unicode): ?>
+                            <div class="eif-icon-item"
+                                data-icon-name="<?php echo esc_attr($iconName); ?>"
+                                data-font-name="<?php echo esc_attr($font); ?>"
+                                data-shortcode='[eif-icon icon="<?php echo esc_attr($iconName); ?>"]'
+                                style="width: 120px; padding: 0.5em; text-align: center; box-sizing: border-box; cursor: pointer;"
+                                title="Click to copy shortcode">
+
+                                <div class="eif-icon-clickable" style="display: inline-block;">
+                                    <span class="eif-<?php echo esc_attr(strtolower($font) . '__' . strtolower($iconName)); ?>"></span>
+                                    <span class="eif-icon-label" style="font-size: 12px;"><?php echo esc_html($iconName); ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endforeach; ?>
+    </div><?
 }
 
 function displayFontSelectTab() {

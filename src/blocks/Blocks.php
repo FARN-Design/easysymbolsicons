@@ -24,6 +24,10 @@ class Blocks {
 	public static function setup() {
 		add_action( 'init', function () {
 			$block_registered = register_block_type( __DIR__ . '/esi-icon/build/eif-icon' );
+
+			require_once __DIR__ . '/esi-shortcode/esi-shortcode.php';
+
+			add_shortcode('esi-icon', 'render_esi_icon_shortcode');
 		} );
     }
 }
