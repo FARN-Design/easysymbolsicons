@@ -50,7 +50,7 @@ function render_esi_icon_shortcode($attributes) {
         }
 
         if ($realFontKey !== null && isset($fonts[$realFontKey][$iconName])) {
-            return '<span class="esi-' . esc_attr($fontFamily) . '__' . esc_attr($iconName) . '"></span>';
+            return '<span class="esi-' . esc_attr($fontFamily) . '-' . esc_attr($iconName) . '"></span>';
         }
     }
 
@@ -64,7 +64,7 @@ function render_esi_icon_shortcode($attributes) {
 
         if (count($matches) === 1) {
             $fontFamily = sanitize_html_class(strtolower($matches[0]));
-            return '<span class="esi-' . esc_attr($fontFamily) . '__' . esc_attr($iconName) . '"></span>';
+            return '<span class="esi-' . esc_attr($fontFamily) . '-' . esc_attr($iconName) . '"></span>';
         } else if (count($matches) > 1) {
             error_log("Icon '{$iconName}' found in multiple fonts: " . implode(', ', $matches));
         } else {
