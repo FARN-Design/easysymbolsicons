@@ -512,19 +512,15 @@ class IconHandler {
                 wp_enqueue_style(
                     'easysymbolsicons-unified-css',
                     $css_file_url,
-                    [],
-                    filemtime($css_file_dir)
                 );
             });
 
-            add_action('admin_init', function() use ($css_file_url) {
-                add_editor_style(
-                    $css_file_url
-                );
+            add_action('admin_enqueue_scripts', function() use ($css_file_url) {
+	            wp_enqueue_style(
+		            'easysymbolsicons-unified-css',
+		            $css_file_url,
+	            );
             });
-        } else {
-//            error_log("No unified CSS file found to enqueue.");
         }
     }
-
 }

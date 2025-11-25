@@ -117,7 +117,7 @@ function displayAvailableIconsTab() {
                                 title="Click to copy shortcode">
 
                                 <div class="esi-icon-clickable" style="display: inline-block;">
-                                    <span class="esi-<?php echo esc_attr(strtolower($font) . '__' . strtolower($iconName)); ?>"></span>
+                                    <span class="esi-<?php echo esc_attr(strtolower($font) . '-' . strtolower($iconName)); ?>"></span>
                                     <span class="esi-icon-label" style="font-size: 12px;"><?php echo esc_html($iconName); ?></span>
                                 </div>
                             </div>
