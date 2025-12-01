@@ -3,9 +3,9 @@
 	"apiVersion": 3,
 	"name": "easy-symbols-icons/esi-icon-fonts",
 	"version": "1.0.0",
-	"title": "Easy Symbols & Icons",
+	"title": "Icon",
 	"category": "widgets",
-	"icon": "format",
+	"icon": "insert",
 	"description": "Insert an icon from enabled icon fonts.",
 	"example": {},
 	"supports": {
