@@ -114,19 +114,19 @@ export default function Edit({ attributes, setAttributes }) {
             <div {...blockProps} className={`${blockProps.className} ${wrapperClass}`}>
                 {selectedIcon.className && isIconValid(selectedIcon.className, fonts) ? (
                     <button
-                        className={selectedIcon.className}
+                        className={selectedIcon.className + ' esi-select-button-has-icon'}
                         style={{ cursor: 'pointer' }}
                         popovertarget={selectorID}
                     ></button>
                 ) : (
-                    <button popovertarget={selectorID}>
-                        {__('No Icon Selected', 'easysymbolsicons')}
+                    <button className="esi-select-button" popovertarget={selectorID}>
+                        {__('add icon', 'easysymbolsicons')}
                     </button>
                 )}
             </div>
 
             {(
-                <div className="esi-icon-grid" id={selectorID} popover="true">
+                <div className="esi-icon-grid" id={selectorID} popover="auto">
                     <div className="esi-icon-search">
                         <TextControl
                             value={searchTerm}
@@ -140,7 +140,7 @@ export default function Edit({ attributes, setAttributes }) {
                     {error && <p>{__('Error: ', 'easysymbolsicons')}{error}</p>}
                     {!loading && !error && filteredFonts.length > 0 && (
                         filteredFonts.map((font, index) => (
-                            <details key={index} className="esi-font-details">
+                            <details key={index} className="esi-font-details" open>
                                 <summary>{font.fontFolder}</summary>
                                 <div className="esi-font-icons">
                                     {font.glyphs.map(([name], i) => {
