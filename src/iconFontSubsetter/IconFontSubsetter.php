@@ -20,8 +20,11 @@ class IconFontSubsetter {
     private string $subsetString = '';
 
     public function __construct(string $fontPath) {
-        if (!file_exists($fontPath)) {
-            throw new Exception("Font file not found: $fontPath");
+        if ( ! file_exists( $fontPath ) ) {
+            throw new Exception( sprintf(
+                __( 'Font file not found: %s', 'easy-symbols-icons' ),
+                esc_html( $fontPath )
+            ) );
         }
         $this->sourceFontPath = $fontPath;
     }

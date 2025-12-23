@@ -2,6 +2,8 @@
 
 namespace Farn\EasySymbolsIcons\menuPages;
 
+use EasyIcon;
+
 class SettingsPage {
 	
 	private static SettingsPage $instance;
@@ -10,8 +12,8 @@ class SettingsPage {
 
 		add_action( 'admin_menu', function(){
 			add_menu_page(
-				__( 'Easy Symbols & Icons Settings', 'easysymbolsicons' ),
-				__( 'Easy Symbols & Icons Settings', 'easysymbolsicons' ),
+				__( 'Easy Symbols & Icons Settings', 'easy-symbols-icons' ),
+				__( 'Easy Symbols & Icons Settings', 'easy-symbols-icons' ),
 				'manage_options',
 				\EasyIcon::$prefix.'settings-page',
 				function (){ include("SettingsPageContent.php"); },
@@ -27,7 +29,7 @@ class SettingsPage {
 
 			wp_enqueue_script(
 				'SettingsPageContent.js',
-				plugin_dir_url( dirname(__DIR__, 2) ) . 'easysymbolsicons/assets/js/SettingsPageContent.js',
+				plugin_dir_url(EasyIcon::$pathToMainPluginFile) . 'assets/js/SettingsPageContent.js',
 				[],
 				'1.0',
 				true
@@ -37,13 +39,13 @@ class SettingsPage {
 				'remove_nonce'     => wp_create_nonce('remove_easysymbolsicons_font'),
 				'rest_nonce'       => wp_create_nonce('wp_rest'),
 				'rest_url'         => esc_url_raw(rest_url('easysymbolsicons/v1/download-default-fonts')),
-				'success_message'  => __('Default fonts downloaded successfully. Reloading...', 'easysymbolsicons'),
-				'error_message'    => __('Failed to download default fonts.', 'easysymbolsicons'),
+				'success_message'  => __('Default fonts downloaded successfully. Reloading...', 'easy-symbols-icons'),
+				'error_message'    => __('Failed to download default fonts.', 'easy-symbols-icons'),
 			]);
 
 			wp_enqueue_style(
 				'SettingsPageContent.css',
-				plugin_dir_url( dirname(__DIR__, 2) ) . 'easysymbolsicons/assets/css/SettingsPageContent.css',
+				plugin_dir_url(EasyIcon::$pathToMainPluginFile) . '/assets/css/SettingsPageContent.css',
 				[],
 				'1.0'
 			);
