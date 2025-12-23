@@ -1,6 +1,6 @@
 <?php
 
-namespace Farn\EasyIconFonts\iconFontSubsetter;
+namespace Farn\EasySymbolsIcons\iconFontSubsetter;
 
 use FontLib\Font;
 use FontLib\BinaryStream;
