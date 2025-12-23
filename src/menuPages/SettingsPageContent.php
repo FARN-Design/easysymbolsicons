@@ -3,23 +3,11 @@ namespace Farn\EasySymbolsIcons\menuPages;
 
 use Farn\EasySymbolsIcons\database\Settings;
 use Farn\EasySymbolsIcons\iconHandler\IconHandler;
+use EasyIcon;
 
-$tab_url = add_query_arg(
-    [
-        'page' => EasyIcon::$prefix . 'settings-page',
-        'tab'  => 'fonts',
-        '_wpnonce' => wp_create_nonce('esi_settings_tab')
-    ],
-    admin_url('admin.php')
-);
-
-
-if ( ! wp_verify_nonce( sanitize_text_field( $nonce ), 'esi_settings_tab' ) ) {
-    wp_die( esc_html__( 'Invalid request. Please try again.', 'easy-symbols-icons' ) );
-}
-
-$tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'default';
+$tab = isset($_GET['tab']) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'default';
 ?>
+
 
 <div class="wrap">
     <h1><?php echo esc_html_e("Settings", "easy-symbols-icons"); ?></h1>

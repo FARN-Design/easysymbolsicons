@@ -22,7 +22,7 @@ class IconFontSubsetter {
     public function __construct(string $fontPath) {
         if ( ! file_exists( $fontPath ) ) {
             throw new Exception( sprintf(
-                __( 'Font file not found: %s', 'easy-symbols-icons' ),
+                esc_html__( 'Font file not found: %s', 'easy-symbols-icons' ),
                 esc_html( $fontPath )
             ) );
         }
