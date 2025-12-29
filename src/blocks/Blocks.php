@@ -1,9 +1,6 @@
 <?php
 
 namespace Farn\EasySymbolsIcons\blocks;
-use Farn\EasySymbolsIcons\iconHandler\IconHandler;
-use WP_Post;
-use WP_REST_Response;
 
 /**
  * Class Blocks
@@ -24,6 +21,7 @@ class Blocks {
 	public static function setup() {
 		add_action( 'init', function () {
 			$block_registered = register_block_type( __DIR__ . '/eics-icon/build/eics-icon' );
+
 			require_once __DIR__ . '/eics-shortcode/eics-shortcode.php';
 
 			add_shortcode('eics-icon', 'render_eics_icon_shortcode');

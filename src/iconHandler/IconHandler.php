@@ -609,7 +609,7 @@ class IconHandler {
                     }
 
                     // Generate frontend CSS
-                    $frontend_css .= "@font-face{font-family:'{$font_name}';src:url('" . self::$iconsUrl . "/{$fontFolder}/" . basename($frontend_font_path) . "') format('truetype');}";
+                    $frontend_css .= "@font-face{font-family:'{$font_name}';src:url('" . self::$iconsUrl . "/{$fontFolder}/" . basename($frontend_font_path) . "?v=" . filemtime($frontend_font_path) . "') format('truetype');}";
                     $frontend_css .= '[class^="eics-' . strtolower($fontFolder) . '__"]{font-family:"' . $font_name . '";}';
 
                     foreach ($icon_map[$fontFolder] as $glyph_name) {
