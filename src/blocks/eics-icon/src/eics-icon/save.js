@@ -15,9 +15,25 @@ export default function Save({ attributes }) {
 		},
 	});
 
+	const isIconValid = (iconClassName) => {
+		if (!window.easySymbolsIconsLoadedFonts) return false;
+		const loadedFonts = window.easySymbolsIconsLoadedFonts;
+
+		for (const fontFolder in loadedFonts) {
+			const fontGlyphs = loadedFonts[fontFolder];
+			for (const glyphName in fontGlyphs) {
+				const expectedClass = `eics-${fontFolder.toLowerCase()}__${glyphName}`;
+				if (iconClassName === expectedClass) {
+					return true;
+				}
+			}
+		}
+		return false;
+	};
+
 	return (
 		<div {...blockProps}>
-			{className ? (
+			{className && isIconValid(className) ? (
 				<span className={className}></span>
 			) : (
 				<p>{__("No Icon Selected", "easy-symbols-icons")}</p>

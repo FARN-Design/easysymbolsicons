@@ -24,7 +24,7 @@ class Blocks {
 
 			require_once __DIR__ . '/eics-shortcode/eics-shortcode.php';
 
-			add_shortcode('eics-icon', 'render_eics_icon_shortcode');
+			add_shortcode('eics-icon', 'eics_render_icon_shortcode');
 		} );
     }
 }

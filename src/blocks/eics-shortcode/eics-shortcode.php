@@ -1,6 +1,6 @@
 <?php
 
-function render_eics_icon_shortcode($attributes) {
+function eics_render_icon_shortcode($attributes) {
     $attributes = shortcode_atts([
         'icon' => '',
     ], $attributes);

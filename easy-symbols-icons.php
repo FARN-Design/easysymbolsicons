@@ -68,16 +68,20 @@ class EasySymbolsIcons
 
         add_action('rest_api_init', [RestHandler::class, 'register_routes']);
 
+        // Hook to save post and update icon usage
+        add_action('save_post', [IconHandler::class, 'update_icon_usage_per_post'], 10, 3);
+
+        add_action('before_delete_post', [IconHandler::class, 'update_icon_usage_removal_post']);
+
         //Activation and Deactivation
         register_activation_hook( __FILE__, [self::class, "pluginActivation"] );
         register_deactivation_hook( __FILE__, [self::class, "pluginDeactivation"] );
     }
 
     public static function pluginActivation():void {
-
+        IconHandler::update_icon_usage_all();
     }
 
     public static function pluginDeactivation():void {
-
     }
 }

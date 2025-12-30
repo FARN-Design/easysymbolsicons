@@ -27,6 +27,7 @@ class IconHandler {
         self::$pluginAssetsDir = EasySymbolsIcons::$pluginDirPath . 'assets/eics-icons/';
 
         self::generateUnifiedFontCSS();
+        self::enqueueUnifiedFontCSS();
     }
 
     /**
@@ -285,60 +286,213 @@ class IconHandler {
     }
 
     /**
-     * Retrieves a list of all used icon class names in the content across posts.
+     * Extracts icon class names from the given content.
      *
-     * @return array An array of unique icon class names found in the content (e.g., eics-materialicons-home).
+     * @param string $content The content to extract icons from.
+     * 
+     * @return array An array of unique icon class names found in the content.
      */
-    public static function get_used_icons(): array {
-        global $wpdb;
+    private static function extract_icons_from_content(string $content): array {
+        $icons = [];
 
-        $like_pattern = '%eics-%';
-
-        $results = $wpdb->get_results("
-            SELECT ID, post_name, post_content
-            FROM {$wpdb->posts}
-            WHERE post_status = 'publish'
-            AND post_type NOT IN ('revision', 'nav_menu_item')
-            AND post_content LIKE '{$like_pattern}'
-        ");
-
-        $used_icons = [];
-
-        if (!empty($results)) {
-            foreach ($results as $post) {
-                $content = $post->post_content;
-
-                if (preg_match_all('/\[eics-icon\s+icon=["\'](eics-[a-zA-Z0-9_-]+|[a-zA-Z0-9_-]+)["\']\]/i', $content, $shortcode_matches)) {
-                    foreach ($shortcode_matches[1] as $icon_class) {
-                        if (strpos($icon_class, 'eics-') !== 0) {
-                            $icon_class = 'eics-' . $icon_class;
-                        }
-                        $used_icons[] = $icon_class;
-                    }
+        // Shortcodes
+        if (preg_match_all(
+            '/\[eics-icon\s+icon=["\'](eics-[a-zA-Z0-9_-]+|[a-zA-Z0-9_-]+)["\']\]/i',
+            $content,
+            $matches
+        )) {
+            foreach ($matches[1] as $icon) {
+                if (strpos($icon, 'eics-') !== 0) {
+                    $icon = 'eics-' . $icon;
                 }
-
-                if (preg_match_all('/class=["\'][^"\']*?(eics-[a-zA-Z0-9_-]+)[^"\']*?["\']/i', $content, $class_matches)) {
-                    foreach ($class_matches[1] as $icon_class) {
-                        if (
-                            preg_match('/eics-icon-fonts$/i', $icon_class) ||
-                            preg_match('/^wp-block-easy-symbols-icons-eics-symbols-icons/i', $icon_class)
-                        ) {
-                            continue;
-                        }
-
-                        $used_icons[] = $icon_class;
-                    }
-                }
+                $icons[] = $icon;
             }
         }
 
-        $used_icons = array_unique($used_icons);
-        sort($used_icons);
+        // CSS classes
+        if (preg_match_all(
+            '/class=["\'][^"\']*?(eics-[a-zA-Z0-9_-]+)[^"\']*?["\']/i',
+            $content,
+            $matches
+        )) {
+            foreach ($matches[1] as $icon) {
+                if (
+                    preg_match('/eics-icon-fonts$/i', $icon) ||
+                    preg_match('/^wp-block-easy-symbols-icons-eics-symbols-icons/i', $icon)
+                ) {
+                    continue;
+                }
 
-        return $used_icons;
+                $icons[] = $icon;
+            }
+        }
+
+        return array_values(array_unique($icons));
     }
 
-    // Private Helper Functions
+
+    /**
+     * Extracts icon class names from the given post.
+     *
+     * @param int $post_id The ID of the post being saved.
+     * @param \WP_Post $post The post object.
+     * @param bool $update Whether this is an update operation.
+     * 
+     * @return array An array of unique icon class names found in the content.
+     */
+    public static function update_icon_usage_per_post(
+        int $post_id,
+        \WP_Post $post,
+        bool $update
+    ): void {
+         // Skip revisions
+        if (wp_is_post_revision($post_id)) {
+            return;
+        }
+
+        if (in_array($post->post_type, ['revision', 'nav_menu_item'], true)) {
+            return;
+        }
+
+        $icon_usage = get_option('eics_icon_usage', []);
+        $new_icons  = self::extract_icons_from_content($post->post_content ?? '');
+
+        // Track icons currently referencing this post
+        $existing_icons = [];
+
+        foreach ($icon_usage as $icon => $post_ids) {
+            if (in_array($post_id, $post_ids, true)) {
+                $existing_icons[] = $icon;
+            }
+        }
+
+        // Remove stale references
+        $removed = array_diff($existing_icons, $new_icons);
+
+        foreach ($removed as $icon) {
+            $icon_usage[$icon] = array_values(
+                array_diff($icon_usage[$icon], [$post_id])
+            );
+
+            if (empty($icon_usage[$icon])) {
+                unset($icon_usage[$icon]);
+            }
+        }
+
+        // Add new references
+        $added = array_diff($new_icons, $existing_icons);
+
+        foreach ($added as $icon) {
+            if (!isset($icon_usage[$icon])) {
+                $icon_usage[$icon] = [];
+            }
+
+            $icon_usage[$icon][] = $post_id;
+        }
+
+        update_option('eics_icon_usage', $icon_usage, false);
+    }
+
+    /**
+     * Retrieves a list of all used icon class names in the content across posts.
+     *
+     * @return array An array of unique icon class names found in the content (e.g., eics-materialicons__home).
+     */
+    public static function update_icon_usage_all(): array {
+        global $wpdb;
+
+        $icon_usage = [];
+
+        $posts = $wpdb->get_results("
+            SELECT ID, post_content
+            FROM {$wpdb->posts}
+            WHERE post_status = 'publish'
+            AND post_type NOT IN ('revision', 'nav_menu_item')
+            AND post_content LIKE '%eics-%'
+        ");
+
+        foreach ($posts as $post) {
+            $icons = self::extract_icons_from_content($post->post_content);
+
+            foreach ($icons as $icon) {
+                if (!isset($icon_usage[$icon])) {
+                    $icon_usage[$icon] = [];
+                }
+
+                $icon_usage[$icon][] = (int) $post->ID;
+            }
+        }
+
+        // Deduplicate + sort
+        foreach ($icon_usage as &$post_ids) {
+            $post_ids = array_values(array_unique($post_ids));
+            sort($post_ids);
+        }
+
+        ksort($icon_usage);
+
+        update_option('eics_icon_usage', $icon_usage, false);
+
+        return $icon_usage;
+    }
+
+    /**
+     * Removes all references to a post from the icon usage tracking.
+     *
+     * @param int $post_id The ID of the post being deleted.
+     * 
+     * @return void
+     */
+    public static function update_icon_usage_removal_post(int $post_id): void {
+        // Skip revisions
+        if (wp_is_post_revision($post_id)) {
+            return;
+        }
+
+        $icon_usage = get_option('eics_icon_usage', []);
+
+        if (empty($icon_usage)) {
+            return;
+        }
+
+        $changed = false;
+
+        foreach ($icon_usage as $icon => $post_ids) {
+            if (!in_array($post_id, $post_ids, true)) {
+                continue;
+            }
+
+            // Remove post reference
+            $icon_usage[$icon] = array_values(
+                array_diff($post_ids, [$post_id])
+            );
+
+            // Remove icon entirely if unused
+            if (empty($icon_usage[$icon])) {
+                unset($icon_usage[$icon]);
+            }
+
+            $changed = true;
+        }
+
+        if ($changed) {
+            update_option('eics_icon_usage', $icon_usage, false);
+        }
+    }
+
+    /**
+     * Retrieves a list of all used icon class names in the content across posts.
+     *
+     * @return array An array of unique icon class names found in the content (e.g., eics-materialicons__home).
+     */
+    public static function get_used_icons(): array {
+        $icon_usage = get_option('eics_icon_usage', []);
+
+        $icons = array_keys($icon_usage);
+        sort($icons);
+
+        return $icons;
+    }
 
     /**
      * Validates if the font file is of a valid type (TTF or OTF).
@@ -510,38 +664,41 @@ class IconHandler {
      * @return void
      */
     private static function generateUnifiedFontCSS(): void {
-        $enabled_fonts = self::getLoadedFonts();
 
+        $enabled_fonts = self::getLoadedFonts();
         if (empty($enabled_fonts)) {
+            update_option('eics_prev_used_icons', self::get_used_icons(), false);
+            update_option('eics_prev_loaded_fonts', [], false);
             return;
         }
 
-        $previous_loaded_fonts_json = get_option('eics_prev_loaded_fonts', '[]');
-        $previous_loaded_fonts = json_decode($previous_loaded_fonts_json, true);
-
+        $previous_loaded_fonts = get_option('eics_prev_loaded_fonts', []);
         $used_icons = self::get_used_icons();
-        $previous_used_icons_json = get_option('eics_prev_used_icons', '[]');
-        $previous_used_icons = json_decode($previous_used_icons_json, true);
+        $previous_used_icons = get_option('eics_prev_used_icons', []);
 
+        sort($used_icons);
+        sort($previous_used_icons);
+
+        // Exit early if nothing changed
         if ($enabled_fonts === $previous_loaded_fonts && $used_icons === $previous_used_icons) {
             return;
         }
 
-        $font_mappings = self::getLoadedFontGlyphsMapping();
 
+        $font_mappings = self::getLoadedFontGlyphsMapping();
         $frontend_css = '';
-        $backend_css = '';
+        $backend_css = [];
 
         foreach ($enabled_fonts as $fontFolder) {
             if (empty($fontFolder) || !isset($font_mappings[$fontFolder])) {
-                error_log("Skipping empty or invalid font folder" . $fontFolder);
+                error_log("Skipping empty or invalid font folder: " . $fontFolder);
                 continue;
             }
 
             $font_dir = self::$iconsDir . '/' . $fontFolder;
             $font_file = self::getFontFilePath($fontFolder);
 
-            if (empty($font_file )) {
+            if (empty($font_file)) {
                 error_log("No valid font file found in {$font_dir}");
                 continue;
             }
@@ -556,10 +713,9 @@ class IconHandler {
                 error_log("Font parse error for '{$fontFolder}': " . $e->getMessage());
                 continue;
             }
-            
-            // temporary iterative assignment of backend css in case of subsetting failure to use as backup
-            $backend_css_temp = '';
-            $backend_css_temp .= "@font-face{font-family:'{$font_name}';src:url('". self::$iconsUrl ."/{$fontFolder}/" . basename($original_font_path) . "?v=" . filemtime($frontend_font_path) . "') format('truetype');}";
+
+            // --- Backend CSS ---
+            $backend_css_temp = "@font-face{font-family:'{$font_name}';src:url('" . self::$iconsUrl . "/{$fontFolder}/" . basename($original_font_path) . "?v=" . filemtime($original_font_path) . "') format('truetype');}";
             $backend_css_temp .= '[class*="eics-' . strtolower($fontFolder) . '__"]::before{font-family:"' . $font_name . '";}';
 
             foreach ($font_mappings[$fontFolder] as $glyph_name => $unicode_hex) {
@@ -567,34 +723,30 @@ class IconHandler {
                 $backend_css_temp .= "{$class}::before{content:\"{$unicode_hex}\";}";
             }
 
-            $backend_css .= $backend_css_temp;
+            $backend_css[] = $backend_css_temp;
 
-            if (!empty($used_icons)) {
-                $frontend_font_path = "{$font_dir}/{$fontFolder}-frontend.ttf";
+            // --- Frontend Subsetting ---
+            $frontend_font_path = $font_dir . '/' . $fontFolder . '-frontend.ttf';
+            $icon_map = [];
 
-                foreach ($used_icons as $icon_class) {
-                    if (preg_match('/^eics-([^\s]+?)__([^\s]+)$/i', $icon_class, $matches)) {
-                        $matchedFontFolder = strtolower(trim($matches[1]));
-                        $fontFolderNormalized = strtolower(trim($fontFolder));
-
-                        if ($matchedFontFolder === $fontFolderNormalized) {
-                            if (!isset($icon_map[$fontFolder])) {
-                                $icon_map[$fontFolder] = [];
-                            }
-                            $icon_map[$fontFolder][] = $matches[2];
-                        }
+            foreach ($used_icons as $icon_class) {
+                if (preg_match('/^eics-([^\s]+?)__([^\s]+)$/i', $icon_class, $matches)) {
+                    $matchedFontFolder = strtolower(trim($matches[1]));
+                    if ($matchedFontFolder === strtolower($fontFolder)) {
+                        $icon_map[$fontFolder][] = $matches[2];
                     }
                 }
-                
-                if (!empty($icon_map[$fontFolder])) {
-                    $unicodeGlyphs = [];
+            }
 
-                    foreach ($icon_map[$fontFolder] as $glyphName) {
-                        if (isset($font_mappings[$fontFolder][$glyphName])) {
-                            $unicodeGlyphs[] = $font_mappings[$fontFolder][$glyphName];
-                        }
+            if (!empty($icon_map[$fontFolder])) {
+                $unicodeGlyphs = [];
+                foreach ($icon_map[$fontFolder] as $glyphName) {
+                    if (isset($font_mappings[$fontFolder][$glyphName])) {
+                        $unicodeGlyphs[] = $font_mappings[$fontFolder][$glyphName];
                     }
+                }
 
+                if (!empty($unicodeGlyphs)) {
                     try {
                         $subsetter = new IconFontSubsetter($original_font_path);
                         if (!$subsetter->subset($unicodeGlyphs, $frontend_font_path)) {
@@ -608,7 +760,7 @@ class IconHandler {
                         continue;
                     }
 
-                    // Generate frontend CSS
+                    // Frontend CSS for subset font
                     $frontend_css .= "@font-face{font-family:'{$font_name}';src:url('" . self::$iconsUrl . "/{$fontFolder}/" . basename($frontend_font_path) . "?v=" . filemtime($frontend_font_path) . "') format('truetype');}";
                     $frontend_css .= '[class*="eics-' . strtolower($fontFolder) . '__"]::before{font-family:"' . $font_name . '";}';
 
@@ -619,15 +771,21 @@ class IconHandler {
                             $frontend_css .= "{$class}::before{content:\"{$unicode_hex}\";}";
                         }
                     }
+                } else {
+                    // No glyphs used → fallback to backend
+                    $frontend_css .= $backend_css_temp;
                 }
+            } else {
+                // No icons in this font used → fallback
+                $frontend_css .= $backend_css_temp;
             }
         }
+
         file_put_contents(self::$iconsDir . '/frontend.css', $frontend_css);
-        file_put_contents(self::$iconsDir . '/backend.css', $backend_css);
+        file_put_contents(self::$iconsDir . '/backend.css', implode('', $backend_css));
 
-        self::enqueueUnifiedFontCSS();
-
-        update_option('eics_prev_loaded_fonts', json_encode($enabled_fonts));
+        update_option('eics_prev_used_icons', $used_icons, false);
+        update_option('eics_prev_loaded_fonts', $enabled_fonts, false);
     }
 
     /**
@@ -638,7 +796,7 @@ class IconHandler {
      *
      * @return void
      */
-    private static function enqueueUnifiedFontCSS(): void {
+    public static function enqueueUnifiedFontCSS(): void {
         $frontend_css_url  = self::$iconsUrl . '/frontend.css';
         $frontend_css_path = self::$iconsDir . '/frontend.css';
 
