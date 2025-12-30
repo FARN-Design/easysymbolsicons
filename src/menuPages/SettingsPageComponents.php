@@ -9,11 +9,8 @@ function eics_displayFontSelectionForm() {
     $selected_fonts = json_decode(Settings::getSettingFromDB('loaded_fonts'), true) ?? [];
     $available_fonts = IconHandler::getAvailableFonts();
 
-    $save_result = eics_handleFontSelectionSave();
-    if (!empty($save_result['notice'])) {
-        echo wp_kses_post($save_result['notice']);
-    }
-    $selected_fonts = $save_result['fonts'] ?? $selected_fonts;
+    // Note: saving is handled in the main page POST handler (SettingsPageContent).
+    // Here we only render the form using the current saved selection.
 
     wp_nonce_field('save_easysymbolsicons_fonts', 'easysymbolsicons_fonts_nonce');
 
