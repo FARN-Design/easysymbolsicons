@@ -108,12 +108,12 @@ function eics_displayGeneralTab() { ?>
  * Font Select Tab
  * ------------------------------- */
 function eics_displayFontSelectTab() { ?>
-    <form method="post">
+    <form method="post" class="select-font-form">
         <h2><?php esc_html_e("Choose Icon Fonts to Load", "easy-symbols-icons"); ?></h2>
         <?php eics_displayFontSelectionForm(); ?>
     </form>
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="upload-font-form">
         <h2><?php esc_html_e("Upload Custom Font", "easy-symbols-icons"); ?></h2>
         <?php eics_displayCustomFontUploadForm(); ?>
     </form>
@@ -131,15 +131,15 @@ function eics_displayAvailableIconsTab() {
     }
 
     $font_names = array_keys($all_icons); ?>
+    <div class="eics-sticky-filter-bar">
+        <input type="search" id="eics-icon-search" placeholder="<?php esc_attr_e('Search by icon or font name...', 'easy-symbols-icons'); ?>">
 
-    <h2><?php esc_html_e('Available Icons', 'easy-symbols-icons'); ?></h2>
-    <input type="search" id="eics-icon-search" placeholder="<?php esc_attr_e('Search by icon or font name...', 'easy-symbols-icons'); ?>" style="width: 100%; padding: 0.5em; margin-bottom: 1em;">
-
-    <nav id="eics-fonts-nav" style="display: flex; gap: 1em; overflow-x: auto; margin-bottom: 1em;">
-        <?php foreach ($font_names as $font): ?>
-            <button class="eics-font-jump-btn" data-font="<?php echo esc_attr($font); ?>" style="padding: 0.5em 1em; cursor: pointer;"><?php echo esc_html(ucfirst($font)); ?></button>
-        <?php endforeach; ?>
-    </nav>
+        <nav id="eics-fonts-nav">
+            <?php foreach ($font_names as $font): ?>
+                <button class="eics-font-jump-btn" data-font="<?php echo esc_attr($font); ?>"><?php echo esc_html(ucfirst($font)); ?></button>
+            <?php endforeach; ?>
+        </nav>
+    </div>
 
     <div id="eics-icons-wrapper">
         <?php foreach ($all_icons as $font => $glyphs):
@@ -151,29 +151,31 @@ function eics_displayAvailableIconsTab() {
             }
             ksort($icons_by_letter); ?>
 
-            <section class="eics-font-section" id="font-<?php echo esc_attr($font); ?>" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 3em;">
-                <h2><?php echo esc_html(ucfirst($font)); ?></h2>
-
-                <nav class="eics-alpha-nav" data-font="<?php echo esc_attr($font); ?>" style="margin-bottom: 1em;">
-                    <?php foreach ($icons_by_letter as $letter => $_): ?>
-                        <a href="#<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eics-alpha-link"><?php echo esc_html($letter); ?></a>
-                    <?php endforeach; ?>
-                </nav>
+            <section class="eics-font-section" id="font-<?php echo esc_attr($font); ?>" data-font="<?php echo esc_attr($font); ?>">
+                <div class="eics-font-section-sticky-bar">
+                    <h2><?php echo esc_html(ucfirst($font)); ?></h2>
+                    <nav class="eics-alpha-nav" data-font="<?php echo esc_attr($font); ?>">
+                        <?php foreach ($icons_by_letter as $letter => $_): ?>
+                            <a href="#<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eics-alpha-link"><?php echo esc_html($letter); ?></a>
+                        <?php endforeach; ?>
+                    </nav>
+                </div>
 
                 <div class="eics-icon-group">
                     <?php foreach ($icons_by_letter as $letter => $icons): ?>
-                        <h3 id="<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eics-alpha-header"><?php echo esc_html($letter); ?></h3>
-                        <div class="eics-alpha-group" style="display: flex; flex-wrap: wrap; margin-bottom: 1em;">
+                        <div class="eics-alpha-header-wrapper">
+                            <h3 id="<?php echo esc_attr('alpha-' . $font . '-' . $letter); ?>" class="eics-alpha-header"><?php echo esc_html($letter); ?></h3>
+                        </div>
+                        <div class="eics-alpha-group">
                             <?php foreach ($icons as $iconName => $unicode): ?>
                                 <div class="eics-icon-item"
                                     data-icon-name="<?php echo esc_attr($iconName); ?>"
                                     data-font-name="<?php echo esc_attr($font); ?>"
                                     data-shortcode='[eics-icon icon="<?php echo esc_attr($iconName); ?>"]'
-                                    style="width: 120px; padding: 0.5em; text-align: center; box-sizing: border-box; cursor: pointer;"
                                     title="<?php esc_attr_e("Click to copy shortcode", "easy-symbols-icons"); ?>">
-                                    <div class="eics-icon-clickable" style="display: inline-block;">
+                                    <div class="eics-icon-clickable">
                                         <span class="eics-<?php echo esc_attr(strtolower($font) . '__' . strtolower($iconName)); ?>"></span>
-                                        <span class="eics-icon-label" style="font-size: 12px;"><?php echo esc_html($iconName); ?></span>
+                                        <span class="eics-icon-label"><?php echo esc_html($iconName); ?></span>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

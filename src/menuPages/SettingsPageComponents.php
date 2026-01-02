@@ -22,7 +22,7 @@ function eics_displayFontSelectionForm() {
         echo '<p>' . esc_html__("No available fonts found. Please upload font files.", "easy-symbols-icons") . '</p>';
     }
 
-    echo '<p><input type="submit" class="button button-primary" value="' . esc_html__("Save Font Selection", "easy-symbols-icons") . '"></p>';
+    echo '<input type="submit" class="button button-primary" value="' . esc_html__("Save Font Selection", "easy-symbols-icons") . '">';
 }
 
 
@@ -33,19 +33,19 @@ function eics_displayCustomFontUploadForm() {
 
     <?php wp_nonce_field('upload_custom_font', 'upload_custom_font_nonce'); ?>
     
-    <p><input type="submit" class="button button-primary" value="<?php echo esc_html__("Upload Font", "easy-symbols-icons"); ?>"></p>
+    <input type="submit" class="button button-primary" value="<?php echo esc_html__("Upload Font", "easy-symbols-icons"); ?>">
     <?php
 }
 
 function eics_displayFontCheckbox($font_folder, $font_label, $selected_fonts) {
     ?>
-    <div>
+    <div class="uploaded-font-item">
         <label>
             <input type="checkbox" name="loaded_fonts[]" value="<?php echo esc_attr($font_folder); ?>" <?php checked(in_array($font_folder, $selected_fonts)); ?>>
             <?php echo esc_html($font_label); ?>
-        </label><br>
+        </label>
         <button type="button" class="button button-secondary remove-font" data-font="<?php echo esc_attr($font_folder); ?>">
-            <?php echo esc_html__("Remove", "easy-symbols-icons"); ?>
+            <span class="dashicons dashicons-trash"></span>
         </button>
     </div>
     <?php
