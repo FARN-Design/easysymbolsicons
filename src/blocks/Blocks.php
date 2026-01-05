@@ -20,10 +20,9 @@ class Blocks {
      */
 	public static function setup() {
 		add_action( 'init', function () {
-			$block_registered = register_block_type( __DIR__ . '/eics-icon/build/eics-icon' );
+			register_block_type( __DIR__ . '/eics-icon/build/eics-icon' );
 
 			require_once __DIR__ . '/eics-shortcode/eics-shortcode.php';
-
 			add_shortcode('eics-icon', 'eics_render_icon_shortcode');
 		} );
     }

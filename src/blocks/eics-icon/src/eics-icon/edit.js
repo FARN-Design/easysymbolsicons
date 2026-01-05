@@ -30,18 +30,33 @@ export default function Edit({ attributes, setAttributes }) {
 				let response = await fetch("/wp-json/easysymbolsicons/v1/loaded-fonts");
 
 				if (!response.ok) {
-					response = await fetch(
-						"/?rest_route=/easysymbolsicons/v1/loaded-fonts",
-					);
+					response = await fetch("/?rest_route=/easysymbolsicons/v1/loaded-fonts");
 				}
 
 				if (!response.ok) {
-					throw new Error("Network response was not ok");
+					throw new Error(`HTTP error ${response.status}`);
 				}
 
-				const json = await response.json();
+				const text = await response.text();
+				let json;
 
-				if (typeof json === "object") {
+				try {
+					json = JSON.parse(text);
+				} catch {
+					json = [];
+				}
+
+				if (Array.isArray(json) && json.length === 0) {
+					setError(
+						<span>
+							No fonts found. Please visit the{' '}
+							<a href="/wp-admin/admin.php?page=eics_settings-page&tab=fontselect">
+								font selection page
+							</a>{' '}
+							to add fonts.
+						</span>
+					);
+				} else if (json && typeof json === "object") {
 					setFonts(json);
 				} else {
 					setError("Data is not in the expected format.");

@@ -28,13 +28,13 @@ class RestHandler {
             'permission_callback' => '__return_true',
         ]);
 
-        register_rest_route('easysymbolsicons/v1', '/download-default-fonts', [
-            'methods'  => 'POST',
-            'callback' => [self::class, 'download_default_fonts'],
-            'permission_callback' => function () {
-                return current_user_can('manage_options');
-            },
-        ]);
+        // register_rest_route('easysymbolsicons/v1', '/download-default-fonts', [
+        //     'methods'  => 'POST',
+        //     'callback' => [self::class, 'download_default_fonts'],
+        //     'permission_callback' => function () {
+        //         return current_user_can('manage_options');
+        //     },
+        // ]);
     }
 
     /**
@@ -47,11 +47,9 @@ class RestHandler {
 
         if (is_array($fontGlyphs)) {
             return new WP_REST_Response($fontGlyphs, 200);
-        } else {
-            return new WP_REST_Response([
-                'error' => 'Invalid font data',
-            ], 500);
         }
+
+        return new WP_REST_Response([], 200);
     }
 
     /**
@@ -77,18 +75,18 @@ class RestHandler {
      *
      * @return WP_REST_Response
      */
-    public static function download_default_fonts() {
-        try {
-            IconHandler::initializeIcons();
+    // public static function download_default_fonts() {
+    //     try {
+    //         IconHandler::initializeIcons();
 
-            return new WP_REST_Response([
-                'success' => true,
-                'message' => 'Default fonts installed successfully.',
-            ], 200);
-        } catch (\Throwable $e) {
-            return new WP_REST_Response([
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
+    //         return new WP_REST_Response([
+    //             'success' => true,
+    //             'message' => 'Default fonts installed successfully.',
+    //         ], 200);
+    //     } catch (\Throwable $e) {
+    //         return new WP_REST_Response([
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
 }

@@ -516,8 +516,8 @@ class IconHandler {
      * @return string|null The path to the font file, or null if not found.
      */
     private static function getFontFilePath(string $fontFolder): ?string {
-        $fontFolder = strtolower($fontFolder);
         $fontDir = self::$iconsDir . '/' . $fontFolder;
+        if (!is_dir($fontDir)) return null;
 
         $fontFileTtf = $fontDir . '/' . $fontFolder . '.ttf';
         $fontFileOtf = $fontDir . '/' . $fontFolder . '.otf';
