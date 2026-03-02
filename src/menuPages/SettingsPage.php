@@ -57,7 +57,7 @@ class SettingsPage {
 		add_action('wp_ajax_eics_save_dynamic_subsetting', function() {
 			if (
 				!isset($_POST['nonce']) ||
-				!wp_verify_nonce($_POST['nonce'], 'eics_save_general_setting')
+				!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'eics_save_general_setting')
 			) {
 				wp_send_json_error('Invalid nonce', 403);
 			}

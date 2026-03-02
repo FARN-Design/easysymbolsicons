@@ -1,8 +1,8 @@
-=== Easy Symbol & Icons ===
+=== Easy Symbols & Icons ===
 Contributors: farndesign
 Tags: icons, icon fonts, font management, block editor, easy symbol icon
 Requires at least: 6.2
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 1.0.0
 Requires PHP: 8.2
 License: GPLv3 or later

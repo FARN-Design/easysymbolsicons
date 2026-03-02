@@ -11,3 +11,6 @@ src/blocks/esi-icon/node_modules/
 
 .idea/*
 .DS_Store
+/.gemini/
+/Tasks/
+/submission_feedback.md

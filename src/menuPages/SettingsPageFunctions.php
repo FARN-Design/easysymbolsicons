@@ -29,7 +29,7 @@ function eics_handleCustomFontUpload() {
     if (
         isset($_SERVER['REQUEST_METHOD'], $_POST['upload_custom_font_nonce']) &&
         $_SERVER['REQUEST_METHOD'] === 'POST' &&
-        wp_verify_nonce(wp_unslash($_POST['upload_custom_font_nonce']), 'upload_custom_font')
+        wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['upload_custom_font_nonce'])), 'upload_custom_font')
     ) {
         // Make sure a file was uploaded
         if ( ! empty($_FILES['custom_font']) && is_array($_FILES['custom_font']) ) {
@@ -74,7 +74,7 @@ function eics_handleFontSelectionSave() {
         isset($_SERVER['REQUEST_METHOD'], $_POST['easysymbolsicons_fonts_nonce']) &&
         $_SERVER['REQUEST_METHOD'] === 'POST'
     ) {
-        $nonce = wp_unslash($_POST['easysymbolsicons_fonts_nonce']);
+        $nonce = sanitize_text_field(wp_unslash($_POST['easysymbolsicons_fonts_nonce']));
 
         if (!wp_verify_nonce($nonce, 'save_easysymbolsicons_fonts')) {
             return [];
